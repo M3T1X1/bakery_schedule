@@ -32,5 +32,11 @@ namespace Bakery_Schedule
 
             dgvSchedule.Rows.Add(employee, date, start, end);
         }
+
+        private void btnGoEmployee_Click(object sender, EventArgs e) // Obsługa kliknięcia guzika
+        {
+            EmployeeForm employeeForm = new EmployeeForm(); // Załóżmy, że masz taki formularz
+            employeeForm.Show(); // Otwórz EmployeeForm
+        }
     }
 }

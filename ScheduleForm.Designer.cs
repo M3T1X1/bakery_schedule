@@ -1,16 +1,10 @@
 ﻿namespace Bakery_Schedule
 {
+    using System.Windows.Forms;
+
     partial class ScheduleForm
     {
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.ComboBox cbEmployee;
-        private System.Windows.Forms.DateTimePicker dtpDate;
-        private System.Windows.Forms.DateTimePicker dtpStart;
-        private System.Windows.Forms.DateTimePicker dtpEnd;
-        private System.Windows.Forms.Button btnAddShift;
-        private System.Windows.Forms.DataGridView dgvSchedule;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
-        private System.Windows.Forms.FlowLayoutPanel flowPanelControls;
 
         protected override void Dispose(bool disposing)
         {
@@ -20,105 +14,147 @@
 
         private void InitializeComponent()
         {
-            cbEmployee = new ComboBox();
-            dtpDate = new DateTimePicker();
-            dtpStart = new DateTimePicker();
-            dtpEnd = new DateTimePicker();
-            btnAddShift = new Button();
+            components = new System.ComponentModel.Container();
             dgvSchedule = new DataGridView();
-            tableLayoutPanel = new TableLayoutPanel();
             flowPanelControls = new FlowLayoutPanel();
-
+            btnAddShift = new Button();
+            btnGoEmployee = new Button(); // Dodanie guzika
+            dtpEnd = new DateTimePicker();
+            dtpStart = new DateTimePicker();
+            dtpDate = new DateTimePicker();
+            cbEmployee = new ComboBox();
+            tableLayoutPanel = new TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)dgvSchedule).BeginInit();
+            flowPanelControls.SuspendLayout();
+            tableLayoutPanel.SuspendLayout();
             SuspendLayout();
-
-            // 
-            // tableLayoutPanel
-            // 
-            tableLayoutPanel.Dock = DockStyle.Fill;
-            tableLayoutPanel.ColumnCount = 1;
-            tableLayoutPanel.RowCount = 2;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F)); // 20% dla kontrolek
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 80F)); // 80% dla DataGridView
-            tableLayoutPanel.Controls.Add(flowPanelControls, 0, 0);
-            tableLayoutPanel.Controls.Add(dgvSchedule, 0, 1);
-
-            // 
+            //
+            // dgvSchedule
+            //
+            dgvSchedule.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvSchedule.Dock = DockStyle.Fill;
+            dgvSchedule.Location = new Point(3, 92);
+            dgvSchedule.Margin = new Padding(3, 2, 3, 2);
+            dgvSchedule.Name = "dgvSchedule";
+            dgvSchedule.Size = new Size(694, 281);
+            dgvSchedule.TabIndex = 5;
+            //
             // flowPanelControls
-            // 
-            flowPanelControls.Dock = DockStyle.Fill;
-            flowPanelControls.FlowDirection = FlowDirection.LeftToRight;
-            flowPanelControls.WrapContents = true;
+            //
             flowPanelControls.Controls.Add(cbEmployee);
             flowPanelControls.Controls.Add(dtpDate);
             flowPanelControls.Controls.Add(dtpStart);
             flowPanelControls.Controls.Add(dtpEnd);
             flowPanelControls.Controls.Add(btnAddShift);
-
-            // 
-            // cbEmployee
-            // 
-            cbEmployee.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbEmployee.FormattingEnabled = true;
-            cbEmployee.Size = new Size(200, 28);
-            cbEmployee.Name = "cbEmployee";
-            cbEmployee.TabIndex = 0;
-
-            // 
-            // dtpDate
-            // 
-            dtpDate.Format = DateTimePickerFormat.Short;
-            dtpDate.Size = new Size(120, 27);
-            dtpDate.Name = "dtpDate";
-            dtpDate.TabIndex = 1;
-
-            // 
-            // dtpStart
-            // 
-            dtpStart.Format = DateTimePickerFormat.Time;
-            dtpStart.ShowUpDown = true;
-            dtpStart.Size = new Size(100, 27);
-            dtpStart.Name = "dtpStart";
-            dtpStart.TabIndex = 2;
-
-            // 
-            // dtpEnd
-            // 
-            dtpEnd.Format = DateTimePickerFormat.Time;
-            dtpEnd.ShowUpDown = true;
-            dtpEnd.Size = new Size(100, 27);
-            dtpEnd.Name = "dtpEnd";
-            dtpEnd.TabIndex = 3;
-
-            // 
+            flowPanelControls.Controls.Add(btnGoEmployee); // Dodanie guzika do flowPanelControls
+            flowPanelControls.Dock = DockStyle.Fill;
+            flowPanelControls.Location = new Point(3, 30);
+            flowPanelControls.Margin = new Padding(3, 2, 3, 2);
+            flowPanelControls.Name = "flowPanelControls";
+            flowPanelControls.Padding = new Padding(9, 8, 9, 8);
+            flowPanelControls.Size = new Size(694, 58);
+            flowPanelControls.TabIndex = 0;
+            //
             // btnAddShift
-            // 
-            btnAddShift.Size = new Size(100, 29);
+            //
+            btnAddShift.Location = new Point(494, 10);
+            btnAddShift.Margin = new Padding(3, 2, 3, 2);
             btnAddShift.Name = "btnAddShift";
+            btnAddShift.Size = new Size(105, 22);
             btnAddShift.TabIndex = 4;
             btnAddShift.Text = "Dodaj zmianę";
             btnAddShift.Click += btnAddShift_Click;
-
-            // 
-            // dgvSchedule
-            // 
-            dgvSchedule.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvSchedule.Dock = DockStyle.Fill;
-            dgvSchedule.Location = new Point(12, 50);
-            dgvSchedule.Name = "dgvSchedule";
-            dgvSchedule.Size = new Size(760, 390);
-            dgvSchedule.TabIndex = 5;
-
-            // 
+            //
+            // btnGoEmployee
+            //
+            btnGoEmployee.Location = new Point(605, 10);
+            btnGoEmployee.Margin = new Padding(3, 2, 3, 2);
+            btnGoEmployee.Name = "btnGoEmployee";
+            btnGoEmployee.Size = new Size(120, 22);
+            btnGoEmployee.TabIndex = 5;
+            btnGoEmployee.Text = "Pracownicy";
+            btnGoEmployee.Click += btnGoEmployee_Click; // Dodanie obsługi zdarzenia
+            //
+            // dtpEnd
+            //
+            dtpEnd.Format = DateTimePickerFormat.Time;
+            dtpEnd.Location = new Point(400, 10);
+            dtpEnd.Margin = new Padding(3, 2, 3, 2);
+            dtpEnd.Name = "dtpEnd";
+            dtpEnd.ShowUpDown = true;
+            dtpEnd.Size = new Size(88, 23);
+            dtpEnd.TabIndex = 3;
+            //
+            // dtpStart
+            //
+            dtpStart.Format = DateTimePickerFormat.Time;
+            dtpStart.Location = new Point(306, 10);
+            dtpStart.Margin = new Padding(3, 2, 3, 2);
+            dtpStart.Name = "dtpStart";
+            dtpStart.ShowUpDown = true;
+            dtpStart.Size = new Size(88, 23);
+            dtpStart.TabIndex = 2;
+            //
+            // dtpDate
+            //
+            dtpDate.Format = DateTimePickerFormat.Short;
+            dtpDate.Location = new Point(194, 10);
+            dtpDate.Margin = new Padding(3, 2, 3, 2);
+            dtpDate.Name = "dtpDate";
+            dtpDate.Size = new Size(106, 23);
+            dtpDate.TabIndex = 1;
+            //
+            // cbEmployee
+            //
+            cbEmployee.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbEmployee.FormattingEnabled = true;
+            cbEmployee.Location = new Point(12, 10);
+            cbEmployee.Margin = new Padding(3, 2, 3, 2);
+            cbEmployee.Name = "cbEmployee";
+            cbEmployee.Size = new Size(176, 23);
+            cbEmployee.TabIndex = 0;
+            //
+            // tableLayoutPanel
+            //
+            tableLayoutPanel.ColumnCount = 1;
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel.Controls.Add(flowPanelControls, 0, 1);
+            tableLayoutPanel.Controls.Add(dgvSchedule, 0, 2);
+            tableLayoutPanel.Dock = DockStyle.Fill;
+            tableLayoutPanel.Location = new Point(0, 0);
+            tableLayoutPanel.Margin = new Padding(3, 2, 3, 2);
+            tableLayoutPanel.Name = "tableLayoutPanel";
+            tableLayoutPanel.RowCount = 3;
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 62F));
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel.Size = new Size(700, 375);
+            tableLayoutPanel.TabIndex = 0;
+            //
             // ScheduleForm
-            // 
-            ClientSize = new Size(794, 464);
+            //
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(700, 375);
             Controls.Add(tableLayoutPanel);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "ScheduleForm";
             Text = "Grafik pracy piekarzy";
             Load += ScheduleForm_Load;
             ((System.ComponentModel.ISupportInitialize)dgvSchedule).EndInit();
+            flowPanelControls.ResumeLayout(false);
+            tableLayoutPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
+
+        private DataGridView dgvSchedule;
+        private FlowLayoutPanel flowPanelControls;
+        private ComboBox cbEmployee;
+        private DateTimePicker dtpDate;
+        private DateTimePicker dtpStart;
+        private DateTimePicker dtpEnd;
+        private Button btnAddShift;
+        private Button btnGoEmployee;
+        private TableLayoutPanel tableLayoutPanel;
     }
 }
