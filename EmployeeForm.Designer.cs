@@ -7,7 +7,8 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
+        private System.Windows.Forms.FlowLayoutPanel buttonPanel;
 
         protected override void Dispose(bool disposing)
         {
@@ -17,60 +18,92 @@
 
         private void InitializeComponent()
         {
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
+            dataGridView1 = new DataGridView();
+            btnAdd = new Button();
+            btnEdit = new Button();
+            btnDelete = new Button();
+            tableLayoutPanel = new TableLayoutPanel();
+            buttonPanel = new FlowLayoutPanel();
 
-  
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            SuspendLayout();
+
+            // 
+            // tableLayoutPanel
+            // 
+            tableLayoutPanel.Dock = DockStyle.Fill;
+            tableLayoutPanel.ColumnCount = 1;
+            tableLayoutPanel.RowCount = 2;
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));  // 15% dla przycisków
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));  // 85% dla DataGridView
+            tableLayoutPanel.Controls.Add(buttonPanel, 0, 0);
+            tableLayoutPanel.Controls.Add(dataGridView1, 0, 1);
+
+            // 
+            // buttonPanel
+            // 
+            buttonPanel.Dock = DockStyle.Fill;
+            buttonPanel.FlowDirection = FlowDirection.LeftToRight;
+            buttonPanel.WrapContents = true;
+            buttonPanel.Controls.Add(btnAdd);
+            buttonPanel.Controls.Add(btnEdit);
+            buttonPanel.Controls.Add(btnDelete);
+
+            // 
             // dataGridView1
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView1.ColumnHeadersHeightSizeMode =
-                System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(0, 80);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(800, 370);
-            this.dataGridView1.TabIndex = 0;
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Dock = DockStyle.Fill;
+            dataGridView1.Location = new Point(0, 0);
+            dataGridView1.Margin = new Padding(3, 4, 3, 4);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidth = 51;
+            dataGridView1.Size = new Size(800, 462);
+            dataGridView1.TabIndex = 0;
 
+            // 
             // btnAdd
-            this.btnAdd.Text = "Dodaj";
-            this.btnAdd.Location = new System.Drawing.Point(10, 10);
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            btnAdd.Margin = new Padding(5);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(75, 29);
+            btnAdd.TabIndex = 1;
+            btnAdd.Text = "Dodaj";
+            btnAdd.Click += btnAdd_Click;
 
-            
+            // 
             // btnEdit
-            this.btnEdit.Text = "Edytuj";
-            this.btnEdit.Location = new System.Drawing.Point(100, 10);
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            btnEdit.Margin = new Padding(5);
+            btnEdit.Name = "btnEdit";
+            btnEdit.Size = new Size(75, 29);
+            btnEdit.TabIndex = 2;
+            btnEdit.Text = "Edytuj";
+            btnEdit.Click += btnEdit_Click;
 
-
+            // 
             // btnDelete
-            this.btnDelete.Text = "Usuń";
-            this.btnDelete.Location = new System.Drawing.Point(190, 10);
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            btnDelete.Margin = new Padding(5);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(75, 29);
+            btnDelete.TabIndex = 3;
+            btnDelete.Text = "Usuń";
+            btnDelete.Click += btnDelete_Click;
 
-            // btnSave
-            this.btnSave.Text = "Zapisz";
-            this.btnSave.Location = new System.Drawing.Point(280, 10);
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-
+            // 
             // EmployeeForm
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.btnAdd);
-            this.Controls.Add(this.btnEdit);
-            this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnSave);
-            this.Name = "EmployeeForm";
-            this.Text = "Lista Pracowników";
-            this.Load += new System.EventHandler(this.EmployeeForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 562);
+            Controls.Add(tableLayoutPanel);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "EmployeeForm";
+            Text = "Lista Pracowników";
+            Load += EmployeeForm_Load;
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ResumeLayout(false);
         }
     }
 }

@@ -31,22 +31,19 @@ namespace Bakery_Schedule
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Dodaj pracownika!");
+            MessageBox.Show("Dodano pracownika!");
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Edytuj wybranego pracownika!");
+            MessageBox.Show("Dane pracownika zostały zedytowane!");
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Usuń wybranego pracownika!");
+            MessageBox.Show("Usunięto pracownika!");
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Zapisz zmiany!");
-        }
+       
     }
 }
