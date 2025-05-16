@@ -1,15 +1,20 @@
+﻿using Bakery_Schedule.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Bakery_Schedule
 {
     internal static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            var options = new DbContextOptionsBuilder<BakeryContext>()
+                .UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db") // lub inna baza
+                .Options;
+
+            using var context = new BakeryContext(options);
+            SeedData.Initialize(context); 
+
             ApplicationConfiguration.Initialize();
             Application.Run(new ScheduleForm());
         }

@@ -74,6 +74,25 @@
             btnGoEmployee.TabIndex = 5;
             btnGoEmployee.Text = "Pracownicy";
             btnGoEmployee.Click += btnGoEmployee_Click; // Dodanie obsługi zdarzenia
+
+            btnDeleteShift = new Button();
+            btnDeleteShift.Location = new Point(730, 10); // Ustaw według własnego układu
+            btnDeleteShift.Size = new Size(100, 23);
+            btnDeleteShift.Text = "Usuń zmianę";
+            btnDeleteShift.Click += btnDeleteShift_Click;
+            flowPanelControls.Controls.Add(btnDeleteShift);
+
+            //btnEdit
+            btnEditShift = new Button();
+            btnEditShift.Location = new Point(730, 10);
+            btnEditShift.Margin = new Padding(3, 2, 3, 2);
+            btnEditShift.Name = "btnEditShift";
+            btnEditShift.Size = new Size(105, 22);
+            btnEditShift.TabIndex = 6;
+            btnEditShift.Text = "Edytuj zmianę";
+            btnEditShift.Click += btnEditShift_Click;
+            flowPanelControls.Controls.Add(btnEditShift);
+
             //
             // dtpEnd
             //
@@ -113,6 +132,8 @@
             cbEmployee.Name = "cbEmployee";
             cbEmployee.Size = new Size(176, 23);
             cbEmployee.TabIndex = 0;
+
+   
             //
             // tableLayoutPanel
             //
@@ -135,7 +156,7 @@
             //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(700, 375);
+            ClientSize = new Size(1050, 375);
             Controls.Add(tableLayoutPanel);
             Margin = new Padding(3, 2, 3, 2);
             Name = "ScheduleForm";
@@ -156,5 +177,10 @@
         private Button btnAddShift;
         private Button btnGoEmployee;
         private TableLayoutPanel tableLayoutPanel;
+        private TextBox txtSearchEmployee;
+        private Button btnEditShift;
+        private Button btnDeleteShift;
+
+
     }
 }

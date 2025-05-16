@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Bakery_Schedule.modele;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -7,8 +8,6 @@ namespace Bakery_Schedule
 {
     public partial class ScheduleForm : Form
     {
-        private List<string> employees = new List<string> { "Jan Kowalski", "Anna Nowak", "Piotr Malinowski" };
-
         public ScheduleForm()
         {
             InitializeComponent();
@@ -16,21 +15,189 @@ namespace Bakery_Schedule
 
         private void ScheduleForm_Load(object sender, EventArgs e)
         {
-            cbEmployee.DataSource = employees;
-            dgvSchedule.Columns.Add("Employee", "Pracownik");
-            dgvSchedule.Columns.Add("Date", "Data");
-            dgvSchedule.Columns.Add("Start", "Początek zmiany");
-            dgvSchedule.Columns.Add("End", "Koniec zmiany");
+            // Ustaw kolumny DataGridView
+            dgvSchedule.Columns.Clear();
+            dgvSchedule.Columns.Add("ID_zmiany", "ID Zmiany");
+            dgvSchedule.Columns.Add("Data", "Data");
+            dgvSchedule.Columns.Add("PoczatekZmiany", "Początek zmiany");
+            dgvSchedule.Columns.Add("KoniecZmiany", "Koniec zmiany");
+            dgvSchedule.Columns.Add("Imie", "Imię");
+            dgvSchedule.Columns.Add("Nazwisko", "Nazwisko");
+            dgvSchedule.Columns.Add("id_pracownika", "ID Pracownika");
+
+            // Załaduj pracowników do combo boxa
+            using (var db = new AppDbContext())
+            {
+                var employees = db.Pracownik.ToList();
+                cbEmployee.DataSource = employees;
+                cbEmployee.DisplayMember = "DisplayName"; // zakładam, że masz to w klasie Pracownik
+                cbEmployee.ValueMember = "ID_pracownika";
+            }
+
+            // Załaduj zmiany z bazy do dgvSchedule
+            using (var db = new AppDbContext())
+            {
+                // Załaduj wszystkie zmiany, możesz dołączyć pracownika, jeśli chcesz:
+                var changes = db.Zmiana.ToList();
+
+                dgvSchedule.Rows.Clear();
+
+                foreach (var zmiana in changes)
+                {
+                    dgvSchedule.Rows.Add(
+                        zmiana.ID_zmiany,
+                        zmiana.Data.ToShortDateString(),
+                        zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
+                        zmiana.KoniecZmiany.ToString(@"hh\:mm"),
+                        zmiana.Imie,
+                        zmiana.Nazwisko,
+                        zmiana.ID_pracownika
+                    );
+                }
+            }
         }
 
         private void btnAddShift_Click(object sender, EventArgs e)
         {
-            string employee = cbEmployee.SelectedItem.ToString();
-            string date = dtpDate.Value.ToShortDateString();
-            string start = dtpStart.Value.ToShortTimeString();
-            string end = dtpEnd.Value.ToShortTimeString();
+            if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
+            {
+                using (var db = new AppDbContext())
+                {
+                    // Znajdź pracownika w bazie po ID (jeśli masz ID w cbEmployee)
+                    var pracownik = db.Pracownik.Find(selectedEmployee.ID_pracownika);
+                    if (pracownik == null)
+                    {
+                        MessageBox.Show("Wybrany pracownik nie istnieje w bazie.");
+                        return;
+                    }
 
-            dgvSchedule.Rows.Add(employee, date, start, end);
+                    var zmiana = new modele.Zmiana
+                    {
+                        Data = dtpDate.Value.Date,
+                        PoczatekZmiany = dtpStart.Value.TimeOfDay,
+                        KoniecZmiany = dtpEnd.Value.TimeOfDay,
+                        ID_pracownika = pracownik.ID_pracownika,
+                        Imie = pracownik.Imie,
+                        Nazwisko = pracownik.Nazwisko,
+                        Pracownik = pracownik
+                    };
+
+                    db.Zmiana.Add(zmiana);
+                    db.SaveChanges();
+
+                    // Dodaj do DataGridView nowy wiersz z danymi zmiany (wraz z ID_zmiany z bazy)
+                    dgvSchedule.Rows.Add(
+                        zmiana.ID_zmiany,
+                        zmiana.Data.ToShortDateString(),
+                        zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
+                        zmiana.KoniecZmiany.ToString(@"hh\:mm"),
+                        zmiana.Imie,
+                        zmiana.Nazwisko,
+                        zmiana.ID_pracownika
+                    );
+                }
+            }
+            else
+            {
+                MessageBox.Show("Wybierz pracownika.");
+            }
+        }
+        private void btnEditShift_Click(object sender, EventArgs e)
+{
+    if (dgvSchedule.SelectedRows.Count == 0)
+    {
+        MessageBox.Show("Wybierz wiersz do edycji.");
+        return;
+    }
+
+    var selectedRow = dgvSchedule.SelectedRows[0];
+
+    // Pobierz ID zmiany (klucz główny)
+    if (!int.TryParse(selectedRow.Cells["ID_zmiany"].Value?.ToString(), out int idZmiany))
+    {
+        MessageBox.Show("Nieprawidłowy ID zmiany.");
+        return;
+    }
+
+    using (var db = new AppDbContext())
+    {
+        var zmiana = db.Zmiana.Find(idZmiany);
+        if (zmiana == null)
+        {
+            MessageBox.Show("Zmiana nie znaleziona w bazie.");
+            return;
+        }
+
+        // Pobierz dane z formularza (możesz też zrobić osobny formularz do edycji, ale tu prosta edycja)
+        if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
+        {
+            zmiana.ID_pracownika = selectedEmployee.ID_pracownika;
+            zmiana.Imie = selectedEmployee.Imie;
+            zmiana.Nazwisko = selectedEmployee.Nazwisko;
+
+            zmiana.Data = dtpDate.Value.Date;
+            zmiana.PoczatekZmiany = dtpStart.Value.TimeOfDay;
+            zmiana.KoniecZmiany = dtpEnd.Value.TimeOfDay;
+
+            db.SaveChanges();
+
+            // Aktualizuj DataGridView - można zmienić tylko wiersz, który edytujesz
+            selectedRow.Cells["Data"].Value = zmiana.Data.ToShortDateString();
+            selectedRow.Cells["PoczatekZmiany"].Value = zmiana.PoczatekZmiany.ToString(@"hh\:mm");
+            selectedRow.Cells["KoniecZmiany"].Value = zmiana.KoniecZmiany.ToString(@"hh\:mm");
+            selectedRow.Cells["Imie"].Value = zmiana.Imie;
+            selectedRow.Cells["Nazwisko"].Value = zmiana.Nazwisko;
+            selectedRow.Cells["id_pracownika"].Value = zmiana.ID_pracownika;
+
+            MessageBox.Show("Zmiana została zaktualizowana.");
+        }
+        else
+        {
+            MessageBox.Show("Wybierz pracownika do przypisania zmiany.");
+        }
+    }
+}
+
+        private void btnDeleteShift_Click(object sender, EventArgs e)
+        {
+            if (dgvSchedule.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Wybierz wiersz do usunięcia.");
+                return;
+            }
+
+            var selectedRow = dgvSchedule.SelectedRows[0];
+
+            if (!int.TryParse(selectedRow.Cells["ID_zmiany"].Value?.ToString(), out int idZmiany))
+            {
+                MessageBox.Show("Nieprawidłowy ID zmiany.");
+                return;
+            }
+
+            var confirmResult = MessageBox.Show("Czy na pewno chcesz usunąć tę zmianę?",
+                                                "Potwierdzenie usunięcia",
+                                                MessageBoxButtons.YesNo);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                using (var db = new AppDbContext())
+                {
+                    var zmiana = db.Zmiana.Find(idZmiany);
+                    if (zmiana == null)
+                    {
+                        MessageBox.Show("Zmiana nie znaleziona w bazie.");
+                        return;
+                    }
+
+                    db.Zmiana.Remove(zmiana);
+                    db.SaveChanges();
+                }
+
+                // Usuń wiersz z DataGridView
+                dgvSchedule.Rows.Remove(selectedRow);
+
+                MessageBox.Show("Zmiana została usunięta.");
+            }
         }
 
         private void btnGoEmployee_Click(object sender, EventArgs e) // Obsługa kliknięcia guzika
@@ -38,5 +205,6 @@ namespace Bakery_Schedule
             EmployeeForm employeeForm = new EmployeeForm(); // Załóżmy, że masz taki formularz
             employeeForm.Show(); // Otwórz EmployeeForm
         }
+
     }
 }
