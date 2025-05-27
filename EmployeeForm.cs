@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Bakery_Schedule.modele;
 
 namespace Bakery_Schedule
 {
@@ -17,33 +20,129 @@ namespace Bakery_Schedule
 
         private void LoadEmployeeData()
         {
-            dataGridView1.DataSource = GetEmployees();
-        }
-
-        private object GetEmployees()
-        {
-            return new[]
+            using (var context = new AppDbContext())
             {
-                new { Id = 0, Name = "Jan Kowalski"},
-                new { Id = 1, Name = "Anna Nowak"}
-            };
+                // Najpierw pobieramy dane z bazy (materializacja wyników)
+                var pracownicy = context.Pracownik
+                    .Include(p => p.Stanowisko)
+                        .ThenInclude(s => s.Produkt)
+                        .Include(p => p.Adres)
+                    .ToList(); // ToList tutaj wymusza pobranie danych do pamięci
+
+                // Następnie projektujemy na listę Employee
+                var employees = pracownicy.Select(p => new Employee
+                {
+                    Id = p.ID_pracownika,
+                    FirstName = p.Imie,
+                    LastName = p.Nazwisko,
+                    PhoneNumber = p.Telefon,
+                    ContractType = p.RodzajUmowy,
+                    YearsOfExperience = p.LataDoswiadczenia,
+                    Position = p.Stanowisko?.NazwaStanowiska,
+                    Department = p.Stanowisko?.Produkt?.Nazwa,
+                    AddressId = p.ID_adresu
+                }).ToList();
+
+                dataGridView1.DataSource = employees;
+                dataGridView1.Columns["Id"].HeaderText = "ID";
+                dataGridView1.Columns["FirstName"].HeaderText = "Imię";
+                dataGridView1.Columns["LastName"].HeaderText = "Nazwisko";
+                dataGridView1.Columns["PhoneNumber"].HeaderText = "Telefon";
+                dataGridView1.Columns["ContractType"].HeaderText = "Rodzaj umowy";
+                dataGridView1.Columns["YearsOfExperience"].HeaderText = "Lata doświadczenia";
+                dataGridView1.Columns["Position"].HeaderText = "Stanowisko";
+                dataGridView1.Columns["Department"].HeaderText = "Produkt";
+                dataGridView1.Columns["AddressId"].HeaderText = "ID Adresu";
+
+                if (dataGridView1.Columns.Contains("DisplayInfo"))
+                {
+                    dataGridView1.Columns["DisplayInfo"].Visible = false;
+                }
+            }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Dodano pracownika!");
+            var addForm = new AddEmployeeForm();
+
+            // Gdy zamkniesz formularz, odśwież dane w tabeli
+            addForm.FormClosed += (s, args) => LoadEmployeeData();
+
+            addForm.ShowDialog(); // Otwiera okno modalnie
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Dane pracownika zostały zedytowane!");
+            if (dataGridView1.CurrentRow == null)
+            {
+                MessageBox.Show("Wybierz pracownika do edycji.");
+                return;
+            }
+
+            var selectedEmployee = (Employee)dataGridView1.CurrentRow.DataBoundItem;
+            using (var context = new AppDbContext())
+            {
+                var pracownik = context.Pracownik.Find(selectedEmployee.Id);
+                if (pracownik != null)
+                {
+                    // Tutaj np. edytujemy telefon (lub pokaż dialog edycji)
+                    pracownik.Telefon = "987654321";
+
+                    context.SaveChanges();
+                    LoadEmployeeData();
+                    MessageBox.Show("Dane pracownika zostały zedytowane!");
+                }
+            }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Usunięto pracownika!");
+            if (dataGridView1.CurrentRow == null)
+            {
+                MessageBox.Show("Wybierz pracownika do usunięcia.");
+                return;
+            }
+
+            var selectedEmployee = (Employee)dataGridView1.CurrentRow.DataBoundItem;
+
+            var result = MessageBox.Show(
+                $"Czy na pewno chcesz usunąć pracownika {selectedEmployee.FirstName} {selectedEmployee.LastName}?",
+                "Potwierdzenie usunięcia",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                using (var context = new AppDbContext())
+                {
+                    var pracownik = context.Pracownik
+                        .Include(p => p.Zmiany)
+                        .FirstOrDefault(p => p.ID_pracownika == selectedEmployee.Id);
+
+                    if (pracownik != null)
+                    {
+                        if (pracownik.Zmiany.Any())
+                        {
+                            context.Zmiana.RemoveRange(pracownik.Zmiany);
+                        }
+
+                        context.Pracownik.Remove(pracownik);
+                        context.SaveChanges();
+                        LoadEmployeeData();
+                        MessageBox.Show("Usunięto pracownika wraz z powiązanymi zmianami.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Nie znaleziono pracownika w bazie.");
+                    }
+                }
+            }
+            else
+            {
+                // Użytkownik kliknął "Nie", nic się nie dzieje
+            }
         }
 
-       
+
     }
 }

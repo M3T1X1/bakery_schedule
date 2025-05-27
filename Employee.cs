@@ -11,9 +11,8 @@ namespace Bakery_Schedule
         public string ContractType { get; set; }    // Z Pracownicy.rodzaj_umowy
         public int? YearsOfExperience { get; set; } // Z Pracownicy.lata_doswiadczenia (nullable, jeśli może być puste)
         public string Department { get; set; }      // Np. z Produkty.Nazwa (przez Stanowiska)
+        public int? AddressId { get; set; }
 
-        // Właściwość do wyświetlania w ComboBox
-        // Dostosuj ten format według swoich potrzeb.
         public string DisplayInfo
         {
             get

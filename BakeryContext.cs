@@ -15,7 +15,7 @@ namespace Bakery_Schedule
         }
 
         public DbSet<Adres> Adres { get; set; }
-        public DbSet<Pracownik> Pracownick { get; set; }
+        public DbSet<Pracownik> Pracownik { get; set; }
         public DbSet<Stanowisko> Stanowisko { get; set; }
         public DbSet<Produkt> Produkt { get; set; }
         public DbSet<Zmiana> Zmiana { get; set; }

@@ -7,9 +7,9 @@ namespace Bakery_Schedule.Data
     {
         public static void Initialize(BakeryContext context)
         {
-            context.Database.EnsureCreated();
+            context.Database.EnsureCreated();       
 
-            if (context.Produkt.Any() || context.Adres.Any() || context.Stanowisko.Any() || context.Pracownick.Any())
+            if (context.Produkt.Any() || context.Adres.Any() || context.Stanowisko.Any() || context.Pracownik.Any())
                 return; // Dane już istnieją
 
             var produkty = new List<Produkt>
@@ -73,7 +73,7 @@ namespace Bakery_Schedule.Data
                 new Pracownik { Imie = "Paweł", Nazwisko = "Szymański", Telefon = "789789789", RodzajUmowy = "Umowa o pracę", LataDoswiadczenia = 8, Adres = adresy[8], Stanowisko = stanowiska[8] },
                 new Pracownik { Imie = "Joanna", Nazwisko = "Woźniak", Telefon = "111222333", RodzajUmowy = "Umowa o dzieło", LataDoswiadczenia = 5, Adres = adresy[9], Stanowisko = stanowiska[9] }
             };
-            context.Pracownick.AddRange(pracownicy);
+            context.Pracownik.AddRange(pracownicy);
             context.SaveChanges();
         }
     }

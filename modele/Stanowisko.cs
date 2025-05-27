@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Bakery_Schedule.modele
 {
@@ -15,6 +17,7 @@ namespace Bakery_Schedule.modele
         public decimal ZarobkiNaGodzine { get; set; }
         public string Poziom { get; set; }
 
+        [ForeignKey("Produkt")]
         public int? ID_produktu { get; set; }
         public Produkt Produkt { get; set; }
 
