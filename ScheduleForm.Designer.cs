@@ -55,28 +55,28 @@
             cbEmployee.Size = new Size(201, 28);
             cbEmployee.TabIndex = 0;
             // 
-            // dtpDate
+            // dtpData
             // 
             dtpDate.Format = DateTimePickerFormat.Short;
             dtpDate.Location = new Point(220, 14);
-            dtpDate.Name = "dtpDate";
+            dtpDate.Name = "dtpData";
             dtpDate.Size = new Size(121, 27);
             dtpDate.TabIndex = 1;
             // 
-            // dtpStart
+            // dtpPoczatek
             // 
             dtpStart.Format = DateTimePickerFormat.Time;
             dtpStart.Location = new Point(347, 14);
-            dtpStart.Name = "dtpStart";
+            dtpStart.Name = "dtpPoczatek";
             dtpStart.ShowUpDown = true;
             dtpStart.Size = new Size(100, 27);
             dtpStart.TabIndex = 2;
             // 
-            // dtpEnd
+            // dtpKoniec
             // 
             dtpEnd.Format = DateTimePickerFormat.Time;
             dtpEnd.Location = new Point(453, 14);
-            dtpEnd.Name = "dtpEnd";
+            dtpEnd.Name = "dtpKoniec";
             dtpEnd.ShowUpDown = true;
             dtpEnd.Size = new Size(100, 27);
             dtpEnd.TabIndex = 3;

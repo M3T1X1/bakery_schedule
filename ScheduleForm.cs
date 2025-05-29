@@ -12,7 +12,6 @@ namespace Bakery_Schedule
         {
             InitializeComponent();
         }
-
         private void ScheduleForm_Load(object sender, EventArgs e)
         {
             // Ustaw kolumny DataGridView
@@ -57,6 +56,28 @@ namespace Bakery_Schedule
             }
         }
 
+        public void LoadSchedule()
+        {
+            using (var db = new AppDbContext())
+            {
+                var changes = db.Zmiana.ToList();
+
+                dgvSchedule.Rows.Clear();
+
+                foreach (var zmiana in changes)
+                {
+                    dgvSchedule.Rows.Add(
+                        zmiana.ID_zmiany,
+                        zmiana.Data.ToShortDateString(),
+                        zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
+                        zmiana.KoniecZmiany.ToString(@"hh\:mm"),
+                        zmiana.Imie,
+                        zmiana.Nazwisko,
+                        zmiana.ID_pracownika
+                    );
+                }
+            }
+        }
         private void btnAddShift_Click(object sender, EventArgs e)
         {
             if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
@@ -104,6 +125,27 @@ namespace Bakery_Schedule
         }
         private void btnEditShift_Click(object sender, EventArgs e)
         {
+            if (dgvSchedule.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Wybierz zmianę do edycji.");
+                return;
+            }
+
+            var selectedRow = dgvSchedule.SelectedRows[0];
+            if (!int.TryParse(selectedRow.Cells["ID_zmiany"].Value?.ToString(), out int idZmiany))
+            {
+                MessageBox.Show("Nieprawidłowy ID zmiany.");
+                return;
+            }
+
+            using (var editForm = new EditScheduleForm(idZmiany))
+            {
+                var result = editForm.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    LoadSchedule(); // metoda do załadowania danych do dgvSchedule, którą możesz wywołać ponownie
+                }
+            }
         }
 
         private void btnDeleteShift_Click(object sender, EventArgs e)
