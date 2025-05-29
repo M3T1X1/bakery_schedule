@@ -49,6 +49,7 @@ namespace Bakery_Schedule
             else
             {
                 cbProdukt.Enabled = false;
+                
             }
         }
 
@@ -119,14 +120,14 @@ namespace Bakery_Schedule
 
                 context.Pracownik.Add(pracownik);
 
-                // Jeœli widoczny jest produkt, przypisz go do stanowiska
-                if (cbProdukt.Visible && cbProdukt.SelectedValue != null)
+                
+                var stanowisko = context.Stanowisko.Find(stanowiskoId);
+                if (stanowisko != null)
                 {
-                    int produktId = (int)cbProdukt.SelectedValue;
-
-                    var stanowisko = context.Stanowisko.Find(stanowiskoId);
-                    if (stanowisko != null)
+                    var nazwa = stanowisko.NazwaStanowiska?.ToLower();
+                    if ((nazwa == "piekarz" || nazwa == "cukiernik") && cbProdukt.SelectedIndex != -1)
                     {
+                        int produktId = (int)cbProdukt.SelectedValue;
                         stanowisko.ID_produktu = produktId;
                         context.Entry(stanowisko).State = EntityState.Modified;
                     }

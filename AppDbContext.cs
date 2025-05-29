@@ -13,7 +13,15 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db");
+        var basePath = AppContext.BaseDirectory;
+        var dbPath = Path.Combine(basePath, "baza", "baza.db"); 
+        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+
+        //optionsBuilder.UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db");
+        //optionsBuilder.UseSqlite("Data Source=Desktop\\bakery_schedule\\baza\\baza.db");
+
+        //MessageBox.Show(($"DB PATH: {dbPath}"));
+        //MessageBox.Show(($"Plik istnieje: {File.Exists(dbPath)}"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

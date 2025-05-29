@@ -103,60 +103,8 @@ namespace Bakery_Schedule
             }
         }
         private void btnEditShift_Click(object sender, EventArgs e)
-{
-    if (dgvSchedule.SelectedRows.Count == 0)
-    {
-        MessageBox.Show("Wybierz wiersz do edycji.");
-        return;
-    }
-
-    var selectedRow = dgvSchedule.SelectedRows[0];
-
-    // Pobierz ID zmiany (klucz główny)
-    if (!int.TryParse(selectedRow.Cells["ID_zmiany"].Value?.ToString(), out int idZmiany))
-    {
-        MessageBox.Show("Nieprawidłowy ID zmiany.");
-        return;
-    }
-
-    using (var db = new AppDbContext())
-    {
-        var zmiana = db.Zmiana.Find(idZmiany);
-        if (zmiana == null)
         {
-            MessageBox.Show("Zmiana nie znaleziona w bazie.");
-            return;
         }
-
-        // Pobierz dane z formularza (możesz też zrobić osobny formularz do edycji, ale tu prosta edycja)
-        if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
-        {
-            zmiana.ID_pracownika = selectedEmployee.ID_pracownika;
-            zmiana.Imie = selectedEmployee.Imie;
-            zmiana.Nazwisko = selectedEmployee.Nazwisko;
-
-            zmiana.Data = dtpDate.Value.Date;
-            zmiana.PoczatekZmiany = dtpStart.Value.TimeOfDay;
-            zmiana.KoniecZmiany = dtpEnd.Value.TimeOfDay;
-
-            db.SaveChanges();
-
-            // Aktualizuj DataGridView - można zmienić tylko wiersz, który edytujesz
-            selectedRow.Cells["Data"].Value = zmiana.Data.ToShortDateString();
-            selectedRow.Cells["PoczatekZmiany"].Value = zmiana.PoczatekZmiany.ToString(@"hh\:mm");
-            selectedRow.Cells["KoniecZmiany"].Value = zmiana.KoniecZmiany.ToString(@"hh\:mm");
-            selectedRow.Cells["Imie"].Value = zmiana.Imie;
-            selectedRow.Cells["Nazwisko"].Value = zmiana.Nazwisko;
-            selectedRow.Cells["id_pracownika"].Value = zmiana.ID_pracownika;
-
-            MessageBox.Show("Zmiana została zaktualizowana.");
-        }
-        else
-        {
-            MessageBox.Show("Wybierz pracownika do przypisania zmiany.");
-        }
-    }
-}
 
         private void btnDeleteShift_Click(object sender, EventArgs e)
         {
@@ -206,5 +154,6 @@ namespace Bakery_Schedule
             employeeForm.Show(); // Otwórz EmployeeForm
         }
 
+   
     }
 }
