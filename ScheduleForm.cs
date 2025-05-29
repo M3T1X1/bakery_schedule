@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bakery_Schedule
 {
@@ -50,7 +51,7 @@ namespace Bakery_Schedule
                         zmiana.KoniecZmiany.ToString(@"hh\:mm"),
                         zmiana.Imie,
                         zmiana.Nazwisko,
-                        zmiana.ID_pracownika
+                        zmiana.PracownikID_pracownika
                     );
                 }
             }
@@ -73,7 +74,7 @@ namespace Bakery_Schedule
                         zmiana.KoniecZmiany.ToString(@"hh\:mm"),
                         zmiana.Imie,
                         zmiana.Nazwisko,
-                        zmiana.ID_pracownika
+                        zmiana.PracownikID_pracownika
                     );
                 }
             }
@@ -84,38 +85,51 @@ namespace Bakery_Schedule
             {
                 using (var db = new AppDbContext())
                 {
-                    // Znajdź pracownika w bazie po ID (jeśli masz ID w cbEmployee)
-                    var pracownik = db.Pracownik.Find(selectedEmployee.ID_pracownika);
-                    if (pracownik == null)
+                    try
                     {
-                        MessageBox.Show("Wybrany pracownik nie istnieje w bazie.");
-                        return;
+                        var pracownik = db.Pracownik.Find(selectedEmployee.ID_pracownika);
+                        if (pracownik == null)
+                        {
+                            MessageBox.Show("Wybrany pracownik nie istnieje w bazie.");
+                            return;
+                        }
+
+                        var zmiana = new modele.Zmiana
+                        {
+                            Data = dtpDate.Value.Date,
+                            PoczatekZmiany = dtpStart.Value.TimeOfDay,
+                            KoniecZmiany = dtpEnd.Value.TimeOfDay,
+                            PracownikID_pracownika = pracownik.ID_pracownika,
+                            Imie = pracownik.Imie,
+                            Nazwisko = pracownik.Nazwisko
+                        };
+
+                        db.Zmiana.Add(zmiana);
+                        int result = db.SaveChanges();  // <- ile rekordów zapisano?
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Zmiana dodana do bazy!");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Nie dodano żadnego rekordu.");
+                        }
+
+                        dgvSchedule.Rows.Add(
+                            zmiana.ID_zmiany,
+                            zmiana.Data.ToShortDateString(),
+                            zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
+                            zmiana.KoniecZmiany.ToString(@"hh\:mm"),
+                            zmiana.Imie,
+                            zmiana.Nazwisko,
+                            zmiana.PracownikID_pracownika
+                        );
                     }
-
-                    var zmiana = new modele.Zmiana
+                    catch (Exception ex)
                     {
-                        Data = dtpDate.Value.Date,
-                        PoczatekZmiany = dtpStart.Value.TimeOfDay,
-                        KoniecZmiany = dtpEnd.Value.TimeOfDay,
-                        ID_pracownika = pracownik.ID_pracownika,
-                        Imie = pracownik.Imie,
-                        Nazwisko = pracownik.Nazwisko,
-                        Pracownik = pracownik
-                    };
-
-                    db.Zmiana.Add(zmiana);
-                    db.SaveChanges();
-
-                    // Dodaj do DataGridView nowy wiersz z danymi zmiany (wraz z ID_zmiany z bazy)
-                    dgvSchedule.Rows.Add(
-                        zmiana.ID_zmiany,
-                        zmiana.Data.ToShortDateString(),
-                        zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
-                        zmiana.KoniecZmiany.ToString(@"hh\:mm"),
-                        zmiana.Imie,
-                        zmiana.Nazwisko,
-                        zmiana.ID_pracownika
-                    );
+                        MessageBox.Show("Błąd podczas zapisu: " + ex.Message);
+                    }
                 }
             }
             else

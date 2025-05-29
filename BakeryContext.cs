@@ -19,7 +19,7 @@ namespace Bakery_Schedule
         public DbSet<Stanowisko> Stanowisko { get; set; }
         public DbSet<Produkt> Produkt { get; set; }
         public DbSet<Zmiana> Zmiana { get; set; }
-
+/*
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Adres>().ToTable("Adres");
@@ -29,6 +29,15 @@ namespace Bakery_Schedule
             modelBuilder.Entity<Zmiana>().ToTable("Zmiana");
 
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Zmiana>()
+       .HasOne(z => z.Pracownik)
+       .WithMany(p => p.Zmiany)    // zakładam, że masz kolekcję Zmiany w Pracownik
+       .HasForeignKey(z => z.PracownikID_pracownika)
+       .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(modelBuilder);
         }
+*/
     }
 }

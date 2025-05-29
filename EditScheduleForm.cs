@@ -48,7 +48,7 @@ namespace Bakery_Schedule
                 var employees = db.Pracownik.ToList();
                 cbEmployee.DataSource = employees;
                 cbEmployee.DisplayMember = "DisplayName"; 
-                cbEmployee.ValueMember = "ID_pracownika";
+                cbEmployee.ValueMember = "PracownikID_pracownika";
 
                 var zmiana = db.Zmiana.Find(_idZmiany);
                 if (zmiana == null)
@@ -62,8 +62,8 @@ namespace Bakery_Schedule
                 dtpPoczatek.Value = DateTime.Today + zmiana.PoczatekZmiany;
                 dtpKoniec.Value = DateTime.Today + zmiana.KoniecZmiany;
 
-                if (zmiana.ID_pracownika.HasValue)
-                    cbEmployee.SelectedValue = zmiana.ID_pracownika.Value;
+                if (zmiana.PracownikID_pracownika.HasValue)
+                    cbEmployee.SelectedValue = zmiana.PracownikID_pracownika.Value;
             }
         }
 
@@ -85,7 +85,7 @@ namespace Bakery_Schedule
 
                 if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
                 {
-                    zmiana.ID_pracownika = selectedEmployee.ID_pracownika;
+                    zmiana.PracownikID_pracownika = selectedEmployee.ID_pracownika;
                     zmiana.Imie = selectedEmployee.Imie;
                     zmiana.Nazwisko = selectedEmployee.Nazwisko;
                 }

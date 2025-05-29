@@ -13,11 +13,11 @@ public class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var basePath = AppContext.BaseDirectory;
-        var dbPath = Path.Combine(basePath, "baza", "baza.db"); 
-        optionsBuilder.UseSqlite($"Data Source={dbPath}");
+        //var basePath = AppContext.BaseDirectory;
+        //var dbPath = Path.Combine(basePath, "baza", "baza.db"); 
+        //optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
-        //optionsBuilder.UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db");
+        optionsBuilder.UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db");
         //optionsBuilder.UseSqlite("Data Source=Desktop\\bakery_schedule\\baza\\baza.db");
 
         //MessageBox.Show(($"DB PATH: {dbPath}"));
@@ -26,6 +26,20 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // relacje i ograniczenia mo¿esz zdefiniowaæ tutaj
+        modelBuilder.Entity<Adres>().ToTable("Adres");
+        modelBuilder.Entity<Pracownik>().ToTable("Pracownik");
+        modelBuilder.Entity<Stanowisko>().ToTable("Stanowisko");
+        modelBuilder.Entity<Produkt>().ToTable("Produkt");
+        modelBuilder.Entity<Zmiana>().ToTable("Zmiana");
+
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Zmiana>()
+        .HasOne(z => z.Pracownik)
+        .WithMany(p => p.Zmiany)    // zak³adam, ¿e masz kolekcjê Zmiany w Pracownik
+        .HasForeignKey(z => z.PracownikID_pracownika)
+        .OnDelete(DeleteBehavior.Restrict);
+
+        base.OnModelCreating(modelBuilder);
     }
 }
