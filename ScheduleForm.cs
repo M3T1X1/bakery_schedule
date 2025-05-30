@@ -9,6 +9,10 @@ namespace Bakery_Schedule
 {
     public partial class ScheduleForm : Form
     {
+        private int pageSize = 2;
+        private int totalRecords = 0;
+        private int maxSliderValue = 1;
+        private List<Zmiana> allChanges = new();
         public ScheduleForm()
         {
             InitializeComponent();
@@ -24,6 +28,11 @@ namespace Bakery_Schedule
             dgvSchedule.Columns.Add("Imie", "Imię");
             dgvSchedule.Columns.Add("Nazwisko", "Nazwisko");
             dgvSchedule.Columns.Add("id_pracownika", "ID Pracownika");
+
+
+            LoadSchedule();
+
+
 
             // Załaduj pracowników do combo boxa
             using (var db = new AppDbContext())
@@ -61,22 +70,46 @@ namespace Bakery_Schedule
         {
             using (var db = new AppDbContext())
             {
-                var changes = db.Zmiana.ToList();
+                allChanges = db.Zmiana
+                 .Where(z => true) // dowolny warunek jeśli potrzebujesz filtrować
+                 .ToList() // pobierz do pamięci, od teraz LINQ działa w C#
+                 .OrderBy(z => z.Data)
+                 .ThenBy(z => z.PoczatekZmiany)
+                 .ToList();
 
-                dgvSchedule.Rows.Clear();
+                totalRecords = allChanges.Count;
+                maxSliderValue = Math.Max(1, totalRecords - pageSize + 1);
+                trackBarScroll.Maximum = maxSliderValue;
+                trackBarScroll.Value = 1;
 
-                foreach (var zmiana in changes)
-                {
-                    dgvSchedule.Rows.Add(
-                        zmiana.ID_zmiany,
-                        zmiana.Data.ToShortDateString(),
-                        zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
-                        zmiana.KoniecZmiany.ToString(@"hh\:mm"),
-                        zmiana.Imie,
-                        zmiana.Nazwisko,
-                        zmiana.ID_pracownika
-                    );
-                }
+                DisplayRecords(0);
+            }
+        }
+        private void TrackBarScroll_Scroll(object sender, EventArgs e)
+        {
+            int startIndex = trackBarScroll.Value - 1;
+            DisplayRecords(startIndex);
+        }
+        private void DisplayRecords(int startIndex)
+        {
+            dgvSchedule.Rows.Clear();
+
+            var selected = allChanges
+                .Skip(startIndex)
+                .Take(pageSize)
+                .ToList();
+
+            foreach (var zmiana in selected)
+            {
+                dgvSchedule.Rows.Add(
+                    zmiana.ID_zmiany,
+                    zmiana.Data.ToShortDateString(),
+                    zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
+                    zmiana.KoniecZmiany.ToString(@"hh\:mm"),
+                    zmiana.Imie,
+                    zmiana.Nazwisko,
+                    zmiana.ID_pracownika
+                );
             }
         }
         private void btnAddShift_Click(object sender, EventArgs e)
@@ -94,18 +127,44 @@ namespace Bakery_Schedule
                             return;
                         }
 
+                        DateTime selectedDate = dtpDate.Value.Date;
+                        TimeSpan selectedStart = dtpStart.Value.TimeOfDay;
+                        TimeSpan selectedEnd = dtpEnd.Value.TimeOfDay;
+
+                        if (selectedStart >= selectedEnd)
+                        {
+                            MessageBox.Show("Godzina początku zmiany musi być wcześniejsza niż koniec zmiany.");
+                            return;
+                        }
+
+                        // Sprawdzenie konfliktu z innymi zmianami pracownika tego dnia
+                        var dzienneZmiany = db.Zmiana
+                          .Where(z => z.ID_pracownika == pracownik.ID_pracownika && z.Data == selectedDate)
+                          .ToList(); // Przenosimy dane do pamięci, by móc użyć TimeSpan
+
+                        bool conflictExists = dzienneZmiany.Any(z =>
+                            selectedStart < z.KoniecZmiany &&
+                            z.PoczatekZmiany < selectedEnd
+                                                );
+
+                        if (conflictExists)
+                        {
+                            MessageBox.Show("Pracownik ma już inną zmianę, która pokrywa się z podanymi godzinami!", "Konflikt zmian", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
                         var zmiana = new modele.Zmiana
                         {
-                            Data = dtpDate.Value.Date,
-                            PoczatekZmiany = dtpStart.Value.TimeOfDay,
-                            KoniecZmiany = dtpEnd.Value.TimeOfDay,
+                            Data = selectedDate,
+                            PoczatekZmiany = selectedStart,
+                            KoniecZmiany = selectedEnd,
                             ID_pracownika = pracownik.ID_pracownika,
                             Imie = pracownik.Imie,
                             Nazwisko = pracownik.Nazwisko
                         };
 
                         db.Zmiana.Add(zmiana);
-                        int result = db.SaveChanges();  // <- ile rekordów zapisano?
+                        int result = db.SaveChanges();
 
                         if (result > 0)
                         {
