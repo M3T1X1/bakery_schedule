@@ -26,6 +26,9 @@ namespace Bakery_Schedule.modele
         public int? ID_stanowiska { get; set; }
         public Stanowisko Stanowisko { get; set; }
 
+        public int? ID_produktu { get; set; }   
+        public Produkt Produkt { get; set; }
+
         // Pomocnicze właściwości do wyświetlania
         [NotMapped]
         public string FullName => $"{Imie} {Nazwisko}";

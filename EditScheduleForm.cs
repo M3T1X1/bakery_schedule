@@ -62,8 +62,8 @@ namespace Bakery_Schedule
                 dtpPoczatek.Value = DateTime.Today + zmiana.PoczatekZmiany;
                 dtpKoniec.Value = DateTime.Today + zmiana.KoniecZmiany;
 
-                if (zmiana.PracownikID_pracownika.HasValue)
-                    cbEmployee.SelectedValue = zmiana.PracownikID_pracownika.Value;
+                if (zmiana.ID_pracownika.HasValue)
+                    cbEmployee.SelectedValue = zmiana.ID_pracownika.Value;
             }
         }
 
@@ -85,7 +85,7 @@ namespace Bakery_Schedule
 
                 if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
                 {
-                    zmiana.PracownikID_pracownika = selectedEmployee.ID_pracownika;
+                    zmiana.ID_pracownika = selectedEmployee.ID_pracownika;
                     zmiana.Imie = selectedEmployee.Imie;
                     zmiana.Nazwisko = selectedEmployee.Nazwisko;
                 }

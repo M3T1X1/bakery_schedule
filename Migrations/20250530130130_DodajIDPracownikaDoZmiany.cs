@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Bakery_Schedule.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialSQLITE : Migration
+    public partial class DodajIDPracownikaDoZmiany : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,18 +51,17 @@ namespace Bakery_Schedule.Migrations
                     NazwaStanowiska = table.Column<string>(type: "TEXT", nullable: false),
                     ZarobkiNaGodzine = table.Column<decimal>(type: "TEXT", nullable: false),
                     Poziom = table.Column<string>(type: "TEXT", nullable: false),
-                    ID_produktu = table.Column<int>(type: "INTEGER", nullable: true),
-                    ProduktID_produktu = table.Column<int>(type: "INTEGER", nullable: false)
+                    ID_produktu = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stanowisko", x => x.ID_stanowiska);
                     table.ForeignKey(
-                        name: "FK_Stanowisko_Produkt_ProduktID_produktu",
-                        column: x => x.ProduktID_produktu,
+                        name: "FK_Stanowisko_Produkt_ID_produktu",
+                        column: x => x.ID_produktu,
                         principalTable: "Produkt",
                         principalColumn: "ID_produktu",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,25 +76,30 @@ namespace Bakery_Schedule.Migrations
                     RodzajUmowy = table.Column<string>(type: "TEXT", nullable: false),
                     LataDoswiadczenia = table.Column<int>(type: "INTEGER", nullable: false),
                     ID_adresu = table.Column<int>(type: "INTEGER", nullable: true),
-                    AdresID_adresu = table.Column<int>(type: "INTEGER", nullable: false),
                     ID_stanowiska = table.Column<int>(type: "INTEGER", nullable: true),
-                    StanowiskoID_stanowiska = table.Column<int>(type: "INTEGER", nullable: false)
+                    ID_produktu = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pracownik", x => x.ID_pracownika);
                     table.ForeignKey(
-                        name: "FK_Pracownik_Adres_AdresID_adresu",
-                        column: x => x.AdresID_adresu,
+                        name: "FK_Pracownik_Adres_ID_adresu",
+                        column: x => x.ID_adresu,
                         principalTable: "Adres",
                         principalColumn: "ID_adresu",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Pracownik_Stanowisko_StanowiskoID_stanowiska",
-                        column: x => x.StanowiskoID_stanowiska,
+                        name: "FK_Pracownik_Produkt_ID_produktu",
+                        column: x => x.ID_produktu,
+                        principalTable: "Produkt",
+                        principalColumn: "ID_produktu",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Pracownik_Stanowisko_ID_stanowiska",
+                        column: x => x.ID_stanowiska,
                         principalTable: "Stanowisko",
                         principalColumn: "ID_stanowiska",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,39 +113,43 @@ namespace Bakery_Schedule.Migrations
                     KoniecZmiany = table.Column<TimeSpan>(type: "TEXT", nullable: false),
                     Imie = table.Column<string>(type: "TEXT", nullable: false),
                     Nazwisko = table.Column<string>(type: "TEXT", nullable: false),
-                    ID_pracownika = table.Column<int>(type: "INTEGER", nullable: true),
-                    PracownikID_pracownika = table.Column<int>(type: "INTEGER", nullable: false)
+                    ID_pracownika = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Zmiana", x => x.ID_zmiany);
                     table.ForeignKey(
-                        name: "FK_Zmiana_Pracownik_PracownikID_pracownika",
-                        column: x => x.PracownikID_pracownika,
+                        name: "FK_Zmiana_Pracownik_ID_pracownika",
+                        column: x => x.ID_pracownika,
                         principalTable: "Pracownik",
                         principalColumn: "ID_pracownika",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pracownik_AdresID_adresu",
+                name: "IX_Pracownik_ID_adresu",
                 table: "Pracownik",
-                column: "AdresID_adresu");
+                column: "ID_adresu");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pracownik_StanowiskoID_stanowiska",
+                name: "IX_Pracownik_ID_produktu",
                 table: "Pracownik",
-                column: "StanowiskoID_stanowiska");
+                column: "ID_produktu");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stanowisko_ProduktID_produktu",
+                name: "IX_Pracownik_ID_stanowiska",
+                table: "Pracownik",
+                column: "ID_stanowiska");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stanowisko_ID_produktu",
                 table: "Stanowisko",
-                column: "ProduktID_produktu");
+                column: "ID_produktu");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Zmiana_PracownikID_pracownika",
+                name: "IX_Zmiana_ID_pracownika",
                 table: "Zmiana",
-                column: "PracownikID_pracownika");
+                column: "ID_pracownika");
         }
 
         /// <inheritdoc />

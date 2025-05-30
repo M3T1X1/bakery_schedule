@@ -26,20 +26,38 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Adres>().ToTable("Adres");
-        modelBuilder.Entity<Pracownik>().ToTable("Pracownik");
-        modelBuilder.Entity<Stanowisko>().ToTable("Stanowisko");
-        modelBuilder.Entity<Produkt>().ToTable("Produkt");
-        modelBuilder.Entity<Zmiana>().ToTable("Zmiana");
-
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Pracownik>()
+            .HasOne(p => p.Adres)
+            .WithMany(a => a.Pracownicy)
+            .HasForeignKey(p => p.ID_adresu)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Pracownik>()
+            .HasOne(p => p.Stanowisko)
+            .WithMany(s => s.Pracownicy)
+            .HasForeignKey(p => p.ID_stanowiska)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Pracownik>()
+            .HasOne(p => p.Produkt)
+            .WithMany() // nie ma nawigacji odwrotnej w Produkcie
+            .HasForeignKey(p => p.ID_produktu)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Stanowisko>()
+            .HasOne(s => s.Produkt)
+            .WithMany(p => p.Stanowiska)
+            .HasForeignKey(s => s.ID_produktu)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<Zmiana>()
-        .HasOne(z => z.Pracownik)
-        .WithMany(p => p.Zmiany)    // zak³adam, ¿e masz kolekcjê Zmiany w Pracownik
-        .HasForeignKey(z => z.PracownikID_pracownika)
-        .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(z => z.Pracownik)
+            .WithMany(p => p.Zmiany)
+            .HasForeignKey(z => z.ID_pracownika)
+            .OnDelete(DeleteBehavior.SetNull);
 
-        base.OnModelCreating(modelBuilder);
+
     }
 }

@@ -51,7 +51,7 @@ namespace Bakery_Schedule
                         zmiana.KoniecZmiany.ToString(@"hh\:mm"),
                         zmiana.Imie,
                         zmiana.Nazwisko,
-                        zmiana.PracownikID_pracownika
+                        zmiana.ID_pracownika
                     );
                 }
             }
@@ -74,7 +74,7 @@ namespace Bakery_Schedule
                         zmiana.KoniecZmiany.ToString(@"hh\:mm"),
                         zmiana.Imie,
                         zmiana.Nazwisko,
-                        zmiana.PracownikID_pracownika
+                        zmiana.ID_pracownika
                     );
                 }
             }
@@ -99,7 +99,7 @@ namespace Bakery_Schedule
                             Data = dtpDate.Value.Date,
                             PoczatekZmiany = dtpStart.Value.TimeOfDay,
                             KoniecZmiany = dtpEnd.Value.TimeOfDay,
-                            PracownikID_pracownika = pracownik.ID_pracownika,
+                            ID_pracownika = pracownik.ID_pracownika,
                             Imie = pracownik.Imie,
                             Nazwisko = pracownik.Nazwisko
                         };
@@ -123,7 +123,7 @@ namespace Bakery_Schedule
                             zmiana.KoniecZmiany.ToString(@"hh\:mm"),
                             zmiana.Imie,
                             zmiana.Nazwisko,
-                            zmiana.PracownikID_pracownika
+                            zmiana.ID_pracownika
                         );
                     }
                     catch (Exception ex)

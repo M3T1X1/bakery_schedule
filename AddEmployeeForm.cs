@@ -103,10 +103,33 @@ namespace Bakery_Schedule
                 return;
             }
 
+            var stanowisko = cbStanowisko.SelectedItem as Stanowisko;
+            if (stanowisko == null)
+            {
+                MessageBox.Show("Wybierz stanowisko.");
+                return;
+            }
+
+            var nazwaStanowiska = stanowisko.NazwaStanowiska?.ToLower();
+
+            int? produktId = null;
+
+            if (nazwaStanowiska == "piekarz" || nazwaStanowiska == "cukiernik")
+            {
+                // Produkt przypisujemy tylko jeœli stanowisko jest piekarz lub cukiernik
+                if (cbProdukt.Enabled && cbProdukt.SelectedValue != null)
+                {
+                    produktId = (int?)cbProdukt.SelectedValue;
+                }
+            }
+            else
+            {
+                // Dla innych stanowisk produkt jest null
+                produktId = null;
+            }
+
             using (var context = new AppDbContext())
             {
-                var stanowiskoId = (int)cbStanowisko.SelectedValue;
-
                 var pracownik = new Pracownik
                 {
                     Imie = tbImie.Text,
@@ -114,25 +137,12 @@ namespace Bakery_Schedule
                     Telefon = tbTelefon.Text,
                     RodzajUmowy = cbRodzajUmowy.SelectedItem.ToString(),
                     LataDoswiadczenia = lata,
-                    ID_stanowiska = stanowiskoId,
-                    ID_adresu = (int)cbAdres.SelectedValue
+                    ID_stanowiska = stanowisko.ID_stanowiska,
+                    ID_adresu = (int)cbAdres.SelectedValue,
+                    ID_produktu = produktId
                 };
 
                 context.Pracownik.Add(pracownik);
-
-                
-                var stanowisko = context.Stanowisko.Find(stanowiskoId);
-                if (stanowisko != null)
-                {
-                    var nazwa = stanowisko.NazwaStanowiska?.ToLower();
-                    if ((nazwa == "piekarz" || nazwa == "cukiernik") && cbProdukt.SelectedIndex != -1)
-                    {
-                        int produktId = (int)cbProdukt.SelectedValue;
-                        stanowisko.ID_produktu = produktId;
-                        context.Entry(stanowisko).State = EntityState.Modified;
-                    }
-                }
-
                 context.SaveChanges();
             }
 

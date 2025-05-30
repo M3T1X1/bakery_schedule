@@ -12,8 +12,9 @@ namespace Bakery_Schedule
                 .UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db") // lub inna baza
                 .Options;
 
-            using var context = new BakeryContext(options);
-            SeedData.Initialize(context); 
+            using var context = new AppDbContext();
+            SeedData.Initialize(context);
+
 
             ApplicationConfiguration.Initialize();
             Application.Run(new ScheduleForm());

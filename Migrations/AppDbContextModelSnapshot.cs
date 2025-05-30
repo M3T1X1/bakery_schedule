@@ -53,10 +53,10 @@ namespace Bakery_Schedule.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AdresID_adresu")
+                    b.Property<int?>("ID_adresu")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("ID_adresu")
+                    b.Property<int?>("ID_produktu")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ID_stanowiska")
@@ -77,18 +77,17 @@ namespace Bakery_Schedule.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("StanowiskoID_stanowiska")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Telefon")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID_pracownika");
 
-                    b.HasIndex("AdresID_adresu");
+                    b.HasIndex("ID_adresu");
 
-                    b.HasIndex("StanowiskoID_stanowiska");
+                    b.HasIndex("ID_produktu");
+
+                    b.HasIndex("ID_stanowiska");
 
                     b.ToTable("Pracownik");
                 });
@@ -128,15 +127,12 @@ namespace Bakery_Schedule.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProduktID_produktu")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("ZarobkiNaGodzine")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID_stanowiska");
 
-                    b.HasIndex("ProduktID_produktu");
+                    b.HasIndex("ID_produktu");
 
                     b.ToTable("Stanowisko");
                 });
@@ -167,12 +163,9 @@ namespace Bakery_Schedule.Migrations
                     b.Property<TimeSpan>("PoczatekZmiany")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PracownikID_pracownika")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ID_zmiany");
 
-                    b.HasIndex("PracownikID_pracownika");
+                    b.HasIndex("ID_pracownika");
 
                     b.ToTable("Zmiana");
                 });
@@ -181,17 +174,22 @@ namespace Bakery_Schedule.Migrations
                 {
                     b.HasOne("Bakery_Schedule.modele.Adres", "Adres")
                         .WithMany("Pracownicy")
-                        .HasForeignKey("AdresID_adresu")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ID_adresu")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Bakery_Schedule.modele.Produkt", "Produkt")
+                        .WithMany()
+                        .HasForeignKey("ID_produktu")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Bakery_Schedule.modele.Stanowisko", "Stanowisko")
                         .WithMany("Pracownicy")
-                        .HasForeignKey("StanowiskoID_stanowiska")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ID_stanowiska")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Adres");
+
+                    b.Navigation("Produkt");
 
                     b.Navigation("Stanowisko");
                 });
@@ -200,9 +198,8 @@ namespace Bakery_Schedule.Migrations
                 {
                     b.HasOne("Bakery_Schedule.modele.Produkt", "Produkt")
                         .WithMany("Stanowiska")
-                        .HasForeignKey("ProduktID_produktu")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ID_produktu")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Produkt");
                 });
@@ -211,9 +208,8 @@ namespace Bakery_Schedule.Migrations
                 {
                     b.HasOne("Bakery_Schedule.modele.Pracownik", "Pracownik")
                         .WithMany("Zmiany")
-                        .HasForeignKey("PracownikID_pracownika")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ID_pracownika")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Pracownik");
                 });

@@ -24,10 +24,10 @@ namespace Bakery_Schedule
             {
                 // Najpierw pobieramy dane z bazy (materializacja wyników)
                 var pracownicy = context.Pracownik
-                    .Include(p => p.Stanowisko)
-                        .ThenInclude(s => s.Produkt)
-                        .Include(p => p.Adres)
-                    .ToList(); // ToList tutaj wymusza pobranie danych do pamięci
+                .Include(p => p.Stanowisko)
+                .Include(p => p.Produkt)    // Produkt przypisany do pracownika, nie do stanowiska
+                .Include(p => p.Adres)
+                .ToList();
 
                 // Następnie projektujemy na listę Employee
                 var employees = pracownicy.Select(p => new Employee
@@ -39,7 +39,7 @@ namespace Bakery_Schedule
                     ContractType = p.RodzajUmowy,
                     YearsOfExperience = p.LataDoswiadczenia,
                     Position = p.Stanowisko?.NazwaStanowiska,
-                    Department = p.Stanowisko?.Produkt?.Nazwa,
+                    Department = p.Produkt?.Nazwa,  // teraz produkt przypisany do pracownika
                     AddressId = p.ID_adresu
                 }).ToList();
 

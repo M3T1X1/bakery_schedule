@@ -19,7 +19,7 @@ namespace Bakery_Schedule.modele
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
 
-        public int? PracownikID_pracownika { get; set; }
+        public int? ID_pracownika { get; set; }
         public Pracownik Pracownik { get; set; }
     }
 }
