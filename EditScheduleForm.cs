@@ -48,7 +48,7 @@ namespace Bakery_Schedule
                 var employees = db.Pracownik.ToList();
                 cbEmployee.DataSource = employees;
                 cbEmployee.DisplayMember = "DisplayName"; 
-                cbEmployee.ValueMember = "PracownikID_pracownika";
+                cbEmployee.ValueMember = "ID_pracownika";
 
                 var zmiana = db.Zmiana.Find(_idZmiany);
                 if (zmiana == null)

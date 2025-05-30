@@ -80,19 +80,10 @@ namespace Bakery_Schedule
             }
 
             var selectedEmployee = (Employee)dataGridView1.CurrentRow.DataBoundItem;
-            using (var context = new AppDbContext())
-            {
-                var pracownik = context.Pracownik.Find(selectedEmployee.Id);
-                if (pracownik != null)
-                {
-                    // Tutaj np. edytujemy telefon (lub pokaż dialog edycji)
-                    pracownik.Telefon = "987654321";
+            var editForm = new EditEmployeeForm(selectedEmployee.Id);
 
-                    context.SaveChanges();
-                    LoadEmployeeData();
-                    MessageBox.Show("Dane pracownika zostały zedytowane!");
-                }
-            }
+            editForm.FormClosed += (s, args) => LoadEmployeeData();
+            editForm.ShowDialog();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)

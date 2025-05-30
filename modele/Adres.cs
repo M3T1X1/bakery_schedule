@@ -19,5 +19,6 @@ namespace Bakery_Schedule.modele
         public string NrDomu { get; set; }
 
         public ICollection<Pracownik> Pracownicy { get; set; }
+        public string PelnyAdres => $"{Ulica} {Miasto}";
     }
 }
