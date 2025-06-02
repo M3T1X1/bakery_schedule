@@ -150,7 +150,5 @@
         private System.Windows.Forms.Label lblDate;
         private System.Windows.Forms.Label lblStart;
         private System.Windows.Forms.Label lblEnd;
-        private System.Windows.Forms.TextBox txtImie;
-        private System.Windows.Forms.TextBox txtNazwisko;
     }
 }

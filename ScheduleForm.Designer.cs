@@ -174,7 +174,7 @@
         private Button btnAddShift;
         private Button btnGoEmployee;
         private TableLayoutPanel tableLayoutPanel;
-        private TextBox txtSearchEmployee;
+        
         private Button btnEditShift;
         private Button btnDeleteShift;
         private DataGridView dgvSchedule;

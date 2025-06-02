@@ -13,7 +13,7 @@ namespace Bakery_Schedule
         private System.Windows.Forms.ComboBox cbAdres;  
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ComboBox cbProdukt;
-        private System.Windows.Forms.Label lblProdukt;
+        
 
         protected override void Dispose(bool disposing)
         {
