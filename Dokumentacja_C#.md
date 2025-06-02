@@ -9,10 +9,10 @@
 - [Widoki](#widoki)
   - [Widok główny (ScheduleForm)](#widok-główny-scheduleform)
   - [Widok listy pracowników (EmployeeForm)](#widok-listy-pracowników-employeeform)
-- [Struktura danych](#struktura-danych)
-- [Wymagania](#wymagania)
-- [Uruchomienie](#uruchomienie)
-- [Baza danych](#baza-danych)
+  - [Widok edytowania zmiany (EditScheduleForm)](#widok-edytowania-zmiany-editscheduleform)
+  - [Widok dodawania pracowników (AddEmployeeForm)](#widok-dodawania-pracowników-addemployeeform)
+  - [Widok edytowania pracowników (EditEmployeeForm)](#widok-edytowania-pracowników-editemployeeform)
+- [Baza danych](#baza-danych-szczegóły-techniczne)
 - [Autor](#autor)
 
 ---
@@ -29,7 +29,8 @@ Aplikacja umożliwia dodawanie, edycję oraz usuwanie zmian pracowników, oraz s
 - Lista pracowników z możliwością dodawania, edytowania i usuwania
 - Obsługa relacji: pracownik — adres, stanowisko, produkt
 - Paginacja listy zmian (slider)
-- Seeder dzięki któremu mozna zapełnić baze danymi.
+- Seeder dzięki któremu można zapełnić bazę danymi
+
 ## Widoki
 
 ### Widok główny (ScheduleForm)
@@ -50,22 +51,22 @@ Aplikacja umożliwia dodawanie, edycję oraz usuwanie zmian pracowników, oraz s
 
 ### Widok edytowania zmiany (EditScheduleForm)
 
-- Po wybraniu danej zmiany wyświetla się nam formularz edycji
-- Mamy listę rozwijana która pobiera pracowników z bazy
-- Mamy pole kalendarza dzięki któremu możemy zmienić date zmiany
-- Istnieją 2 pola określające czas rozpoczęcia i zakończenia zmiany
+- Po wybraniu danej zmiany wyświetla się formularz edycji
+- Lista rozwijana pobierająca pracowników z bazy
+- Pole kalendarza do zmiany daty zmiany
+- Dwa pola określające czas rozpoczęcia i zakończenia zmiany
 
 ### Widok dodawania pracowników (AddEmployeeForm)
 
-- Mamy 4 miejsca na wpisanie danych pracownika: Imie, Nazwisko, Telefon, Lata Doświadczenia
-- Pobieramy z bazy danych/list interesujące nas wartości, które przypiszemy danemu pracownikowi: Rodzaj Umowy (lista), Stanowisko, Adres, Produkt
-- W sytuacji kiedy pracownik nie jest "Piekarzem", bądź cukiernikiem pole z produktem jest wyłączone i dane nie są zapisywane w bazie danych
+- Cztery pola do wpisania danych: Imię, Nazwisko, Telefon, Lata doświadczenia
+- Listy rozwijane do przypisania: Rodzaju umowy, Stanowiska, Adresu, Produktu
+- Gdy pracownik nie jest piekarzem/cukiernikiem, pole „Produkt” jest nieaktywne
 
 ### Widok edytowania pracowników (EditEmployeeForm)
 
-- Sytuacja ma się tutaj analogicznie do widoku wyżej, z tą różnicą że tutaj mamy w polu lata doświadczenie pole z wartością liczbową.
+- Jak w widoku dodawania, ale z możliwością modyfikacji wartości liczbowych w polu „Lata doświadczenia”
 
-### Baza danych (szczegóły techniczne)
+## Baza danych (szczegóły techniczne)
 
 Aplikacja korzysta z **SQLite** oraz **Entity Framework Core** do mapowania obiektowo-relacyjnego. Model danych zawiera następujące tabele:
 
@@ -96,7 +97,7 @@ Kolumny:
 
 ---
 
-####  Relacje
+#### Relacje
 
 - `Pracownik` — `Adres`: **1:N**
 - `Pracownik` — `Stanowisko`: **1:N**
@@ -105,3 +106,7 @@ Kolumny:
 - `Pracownik` — `Zmiana`: **1:N**
 
 > Wszystkie relacje wykorzystują `ON DELETE SET NULL`.
+
+## Autor
+
+Autor: Kacper Dusza
