@@ -42,7 +42,7 @@ public class AppDbContext : DbContext
 
         modelBuilder.Entity<Pracownik>()
             .HasOne(p => p.Produkt)
-            .WithMany() // nie ma nawigacji odwrotnej w Produkcie
+            .WithMany() 
             .HasForeignKey(p => p.ID_produktu)
             .OnDelete(DeleteBehavior.SetNull);
 

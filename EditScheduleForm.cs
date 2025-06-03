@@ -42,7 +42,7 @@ namespace Bakery_Schedule
 
         private void EditScheduleForm_Load(object sender, EventArgs e)
         {
-            // Załaduj listę pracowników do cbEmployee
+            
             using (var db = new AppDbContext())
             {
                 var employees = db.Pracownik.ToList();

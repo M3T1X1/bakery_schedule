@@ -9,7 +9,7 @@ namespace Bakery_Schedule
         static void Main()
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db") // lub inna baza
+                .UseSqlite("Data Source=C:\\Users\\dusza\\Desktop\\bakery_schedule\\baza\\baza.db") 
                 .Options;
 
             using var context = new AppDbContext();

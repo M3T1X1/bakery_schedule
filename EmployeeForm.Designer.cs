@@ -34,8 +34,8 @@
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.ColumnCount = 1;
             tableLayoutPanel.RowCount = 2;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 15F));  // 15% dla przycisków
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));  // 85% dla DataGridView
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 15F)); 
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 85F));  
             tableLayoutPanel.Controls.Add(buttonPanel, 0, 0);
             tableLayoutPanel.Controls.Add(dataGridView1, 0, 1);
 

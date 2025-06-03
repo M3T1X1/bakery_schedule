@@ -22,14 +22,14 @@ namespace Bakery_Schedule
         {
             using (var context = new AppDbContext())
             {
-                // Najpierw pobieramy dane z bazy (materializacja wyników)
+               
                 var pracownicy = context.Pracownik
                 .Include(p => p.Stanowisko)
-                .Include(p => p.Produkt)    // Produkt przypisany do pracownika, nie do stanowiska
+                .Include(p => p.Produkt)    
                 .Include(p => p.Adres)
                 .ToList();
 
-                // Następnie projektujemy na listę Employee
+                
                 var employees = pracownicy.Select(p => new Employee
                 {
                     Id = p.ID_pracownika,
@@ -39,7 +39,7 @@ namespace Bakery_Schedule
                     ContractType = p.RodzajUmowy,
                     YearsOfExperience = p.LataDoswiadczenia,
                     Position = p.Stanowisko?.NazwaStanowiska,
-                    Department = p.Produkt?.Nazwa,  // teraz produkt przypisany do pracownika
+                    Department = p.Produkt?.Nazwa,  
                     AddressId = p.ID_adresu
                 }).ToList();
 
@@ -65,10 +65,10 @@ namespace Bakery_Schedule
         {
             var addForm = new AddEmployeeForm();
 
-            // Gdy zamkniesz formularz, odśwież dane w tabeli
+            // Odswieżanie danych w tabeli po zamknieciu formularza
             addForm.FormClosed += (s, args) => LoadEmployeeData();
 
-            addForm.ShowDialog(); // Otwiera okno modalnie
+            addForm.ShowDialog(); 
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -130,7 +130,6 @@ namespace Bakery_Schedule
             }
             else
             {
-                // Użytkownik kliknął "Nie", nic się nie dzieje
             }
         }
 

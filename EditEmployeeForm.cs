@@ -20,25 +20,23 @@ namespace Bakery_Schedule
         {
             using (var context = new AppDbContext())
             {
-                // Załaduj stanowiska
+                
                 cbPosition.DataSource = context.Stanowisko.ToList();
                 cbPosition.DisplayMember = "NazwaStanowiska";
                 cbPosition.ValueMember = "ID_stanowiska";
 
-                // Załaduj produkty (opcjonalnie, jeśli chcesz mieć w formularzu)
                 cbProduct.DataSource = context.Produkt.ToList();
                 cbProduct.DisplayMember = "Nazwa";
                 cbProduct.ValueMember = "ID_produktu";
 
-                // Załaduj listę ID adresów
                 cbAddress.DataSource = context.Adres.ToList();
                 cbAddress.DisplayMember = "PelnyAdres";
                 cbAddress.ValueMember = "ID_adresu";
-                // Załaduj dane pracownika
+           
                 var emp = context.Pracownik
-    .Include(p => p.Stanowisko)
-    .Include(p => p.Adres)
-    .FirstOrDefault(p => p.ID_pracownika == employeeId);
+                .Include(p => p.Stanowisko)
+                .Include(p => p.Adres)
+                .FirstOrDefault(p => p.ID_pracownika == employeeId);
                 if (emp != null)
                 {
                     txtFirstName.Text = emp.Imie;
@@ -49,7 +47,6 @@ namespace Bakery_Schedule
 
                     cbPosition.SelectedValue = emp.ID_stanowiska ?? -1;
                     cbAddress.SelectedValue = emp.ID_adresu;
-                    // Jeśli chcesz ustawić produkt (np. powiązany ze stanowiskiem):
                     if (emp.Stanowisko?.ID_produktu != null)
                     {
                         cbProduct.SelectedValue = emp.Stanowisko.ID_produktu.Value;

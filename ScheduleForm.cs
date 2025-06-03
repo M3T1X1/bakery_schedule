@@ -144,6 +144,13 @@ namespace Bakery_Schedule
                         TimeSpan selectedStart = dtpStart.Value.TimeOfDay;
                         TimeSpan selectedEnd = dtpEnd.Value.TimeOfDay;
 
+                        //dziwne ale ten warunek nie działa
+                        if (selectedStart == selectedEnd)
+                        {
+                            MessageBox.Show("Godziny początku i końca zmiany są identyczne.");
+                            return;
+                        }
+
                         if (selectedStart >= selectedEnd)
                         {
                             MessageBox.Show("Godzina początku zmiany musi być wcześniejsza niż koniec zmiany.");
@@ -229,11 +236,10 @@ namespace Bakery_Schedule
                 var result = editForm.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    LoadSchedule(); // metoda do załadowania danych do dgvSchedule, którą możesz wywołać ponownie
+                    LoadSchedule(); 
                 }
             }
         }
-
         private void btnDeleteShift_Click(object sender, EventArgs e)
         {
             if (dgvSchedule.SelectedRows.Count == 0)
@@ -276,10 +282,10 @@ namespace Bakery_Schedule
             }
         }
 
-        private void btnGoEmployee_Click(object sender, EventArgs e) // Obsługa kliknięcia guzika
+        private void btnGoEmployee_Click(object sender, EventArgs e) 
         {
-            EmployeeForm employeeForm = new EmployeeForm(); // Załóżmy, że masz taki formularz
-            employeeForm.Show(); // Otwórz EmployeeForm
+            EmployeeForm employeeForm = new EmployeeForm(); 
+            employeeForm.Show(); 
         }
 
    
