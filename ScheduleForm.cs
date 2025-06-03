@@ -18,7 +18,6 @@ namespace Bakery_Schedule
         }
         private void ScheduleForm_Load(object sender, EventArgs e)
         {
-            // Ustaw kolumny DataGridView
             dgvSchedule.Columns.Clear();
             dgvSchedule.Columns.Add("ID_zmiany", "ID Zmiany");
             dgvSchedule.Columns.Add("Data", "Data");
@@ -33,19 +32,18 @@ namespace Bakery_Schedule
 
 
 
-            // Załaduj pracowników do combo boxa
             using (var db = new AppDbContext())
             {
                 var employees = db.Pracownik.ToList();
                 cbEmployee.DataSource = employees;
-                cbEmployee.DisplayMember = "DisplayName"; // zakładam, że masz to w klasie Pracownik
+                cbEmployee.DisplayMember = "DisplayName"; 
                 cbEmployee.ValueMember = "ID_pracownika";
             }
 
-            // Załaduj zmiany z bazy do dgvSchedule
+          
             using (var db = new AppDbContext())
             {
-                // Załaduj wszystkie zmiany, możesz dołączyć pracownika, jeśli chcesz:
+               
                 var changes = db.Zmiana.ToList();
 
                 dgvSchedule.Rows.Clear();
@@ -71,9 +69,9 @@ namespace Bakery_Schedule
             {
                 allChanges = db.Zmiana
                 .OrderBy(z => z.Data)   
-                .ToList()               // pobierz dane do pamięci
+                .ToList()               
                 .OrderBy(z => z.Data)   // dla bezpieczeństwa powtórz sortowanie
-                .ThenBy(z => z.PoczatekZmiany) // sortowanie po TimeSpan po stronie klienta
+                .ThenBy(z => z.PoczatekZmiany) 
                 .ToList();
 
                 totalRecords = allChanges.Count;
@@ -157,10 +155,10 @@ namespace Bakery_Schedule
                             return;
                         }
 
-                        // Sprawdzenie konfliktu z innymi zmianami pracownika tego dnia
+                       
                         var dzienneZmiany = db.Zmiana
                           .Where(z => z.ID_pracownika == pracownik.ID_pracownika && z.Data == selectedDate)
-                          .ToList(); // Przenosimy dane do pamięci, by móc użyć TimeSpan
+                          .ToList(); 
 
                         bool conflictExists = dzienneZmiany.Any(z =>
                             selectedStart < z.KoniecZmiany &&

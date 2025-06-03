@@ -31,7 +31,7 @@ namespace Bakery_Schedule
                 return;
             }
 
-            // Pobierz nazwê stanowiska z aktualnie wybranego elementu
+          
             var stanowisko = cbStanowisko.SelectedItem as Stanowisko;
             if (stanowisko == null)
             {
@@ -39,7 +39,7 @@ namespace Bakery_Schedule
                 return;
             }
 
-            // SprawdŸ czy nazwa stanowiska to "piekarz" lub "cukiernik" (ignoruj¹c wielkoœæ liter)
+           
             var nazwa = stanowisko.NazwaStanowiska?.ToLower();
 
             if (nazwa == "piekarz" || nazwa == "cukiernik")
