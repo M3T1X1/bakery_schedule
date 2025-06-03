@@ -101,5 +101,21 @@ namespace Bakery_Schedule
                 }
             }
         }
+
+        private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+
+            // Limit 9 cyfr
+            var textBox = sender as TextBox;
+            if (!char.IsControl(e.KeyChar) && textBox.Text.Length >= 9)
+            {
+                e.Handled = true;
+            }
+        }
+
     }
 }

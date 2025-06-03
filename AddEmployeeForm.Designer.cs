@@ -62,6 +62,8 @@ namespace Bakery_Schedule
             this.tbTelefon.Name = "tbTelefon";
             this.tbTelefon.Size = new System.Drawing.Size(200, 27);
             this.tbTelefon.TabIndex = 2;
+            this.tbTelefon.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbTelefon_KeyPress);
+
 
             // 
             // cbRodzajUmowy

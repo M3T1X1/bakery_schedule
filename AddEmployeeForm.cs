@@ -149,6 +149,18 @@ namespace Bakery_Schedule
             MessageBox.Show("Pracownik zosta³ dodany.");
             this.Close();
         }
+        private void tbTelefon_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // blokuj wciœniêcie
+            }
 
+            
+            if (!char.IsControl(e.KeyChar) && tbTelefon.Text.Length >= 9)
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

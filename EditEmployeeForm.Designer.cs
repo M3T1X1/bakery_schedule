@@ -47,6 +47,7 @@
             txtFirstName = new TextBox();
             txtLastName = new TextBox();
             txtPhoneNumber = new TextBox();
+            txtPhoneNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPhoneNumber_KeyPress);
             txtContractType = new TextBox();
             nudYearsOfExperience = new NumericUpDown() { Minimum = 0, Maximum = 100 };
             cbPosition = new ComboBox() { DropDownStyle = ComboBoxStyle.DropDownList };

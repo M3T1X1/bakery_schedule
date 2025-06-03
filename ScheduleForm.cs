@@ -9,9 +9,8 @@ namespace Bakery_Schedule
 {
     public partial class ScheduleForm : Form
     {
-        private int pageSize = 2;
-        private int totalRecords = 0;
-        private int maxSliderValue = 1;
+        private int pageSize = 1;
+        private int totalRecords;
         private List<Zmiana> allChanges = new();
         public ScheduleForm()
         {
@@ -71,20 +70,32 @@ namespace Bakery_Schedule
             using (var db = new AppDbContext())
             {
                 allChanges = db.Zmiana
-                 .Where(z => true) // dowolny warunek jeśli potrzebujesz filtrować
-                 .ToList() // pobierz do pamięci, od teraz LINQ działa w C#
-                 .OrderBy(z => z.Data)
-                 .ThenBy(z => z.PoczatekZmiany)
-                 .ToList();
+                .OrderBy(z => z.Data)   
+                .ToList()               // pobierz dane do pamięci
+                .OrderBy(z => z.Data)   // dla bezpieczeństwa powtórz sortowanie
+                .ThenBy(z => z.PoczatekZmiany) // sortowanie po TimeSpan po stronie klienta
+                .ToList();
 
                 totalRecords = allChanges.Count;
-                maxSliderValue = Math.Max(1, totalRecords - pageSize + 1);
-                trackBarScroll.Maximum = maxSliderValue;
-                trackBarScroll.Value = 1;
+
+                int maxScroll = Math.Max(0, totalRecords - pageSize);
+
+                trackBarScroll.Minimum = 0;
+                trackBarScroll.Maximum = maxScroll;
+                trackBarScroll.Value = 0;
+                trackBarScroll.LargeChange = pageSize;
+                trackBarScroll.SmallChange = 1;
 
                 DisplayRecords(0);
             }
         }
+
+        private void trackBarScroll_Scroll(object sender, EventArgs e)
+        {
+            int startIndex = trackBarScroll.Value;
+            DisplayRecords(startIndex);
+        }
+
         private void TrackBarScroll_Scroll(object sender, EventArgs e)
         {
             int startIndex = trackBarScroll.Value - 1;
@@ -94,10 +105,12 @@ namespace Bakery_Schedule
         {
             dgvSchedule.Rows.Clear();
 
+            if (allChanges == null || allChanges.Count == 0)
+                return;
+
             var selected = allChanges
                 .Skip(startIndex)
-                .Take(pageSize)
-                .ToList();
+                .Take(pageSize);
 
             foreach (var zmiana in selected)
             {
