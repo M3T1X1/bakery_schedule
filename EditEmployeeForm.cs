@@ -14,6 +14,10 @@ namespace Bakery_Schedule
             InitializeComponent();
             employeeId = id;
             this.Load += EditEmployeeForm_Load;
+            
+            txtYearsOfExperience.KeyPress += txtYearsOfExperience_KeyPress;
+            txtYearsOfExperience.Validating += txtYearsOfExperience_Validating;
+          
         }
 
         private void EditEmployeeForm_Load(object sender, EventArgs e)
@@ -43,7 +47,13 @@ namespace Bakery_Schedule
                     txtLastName.Text = emp.Nazwisko;
                     txtPhoneNumber.Text = emp.Telefon;
                     txtContractType.Text = emp.RodzajUmowy;
-                    nudYearsOfExperience.Value = emp.LataDoswiadczenia;
+
+                    if (!int.TryParse(txtYearsOfExperience.Text, out int lataDosw) || lataDosw < 0)
+                    {
+                        return;
+                    }
+
+                    emp.LataDoswiadczenia = lataDosw;
 
                     cbPosition.SelectedValue = emp.ID_stanowiska ?? -1;
                     cbAddress.SelectedValue = emp.ID_adresu;
@@ -55,6 +65,31 @@ namespace Bakery_Schedule
             }
         }
 
+        private void txtYearsOfExperience_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Tylko cyfry i Backspace
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtYearsOfExperience_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (int.TryParse(txtYearsOfExperience.Text, out int value))
+            {
+                if (value > 45)
+                {
+                    MessageBox.Show("Lata doświadczenia nie mogą być większe niż 45.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true;
+                }
+            }
+            else if (!string.IsNullOrEmpty(txtYearsOfExperience.Text))
+            {
+                MessageBox.Show("Proszę wpisać poprawną liczbę.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
+        }
         private void btnSave_Click(object sender, EventArgs e)
         {
             using (var context = new AppDbContext())
@@ -70,9 +105,17 @@ namespace Bakery_Schedule
                     emp.Nazwisko = txtLastName.Text;
                     emp.Telefon = txtPhoneNumber.Text;
                     emp.RodzajUmowy = txtContractType.Text;
-                    emp.LataDoswiadczenia = (int)nudYearsOfExperience.Value;
+                   
                     emp.ID_stanowiska = (int?)cbPosition.SelectedValue;
                     emp.ID_adresu = (int?)cbAddress.SelectedValue;
+
+
+                    if (!int.TryParse(txtYearsOfExperience.Text, out int lataDosw) || lataDosw < 0)
+                    {
+                        MessageBox.Show("Lata doświadczenia muszą być liczbą nieujemną (0–45)");
+                        return;
+                    }
+                    emp.LataDoswiadczenia = lataDosw;
 
                     // Modyfikujemy produkt przypisany do stanowiska, jeśli to piekarz/cukiernik
                     var stanowisko = context.Stanowisko.Find(emp.ID_stanowiska);
@@ -96,7 +139,10 @@ namespace Bakery_Schedule
                 {
                     MessageBox.Show("Nie znaleziono pracownika.");
                 }
+
             }
+            
+
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)

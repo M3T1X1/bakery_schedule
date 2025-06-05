@@ -20,7 +20,36 @@ namespace Bakery_Schedule
             LoadStanowiska();
             LoadAdresy();
             LoadProdukty();
-        
+
+            tbLataDoswiadczenia.KeyPress += txtYearsOfExperience_KeyPress;
+            tbLataDoswiadczenia.Validating += txtYearsOfExperience_Validating;
+
+        }
+
+        private void txtYearsOfExperience_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Tylko cyfry i Backspace
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtYearsOfExperience_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (int.TryParse(tbLataDoswiadczenia.Text, out int value))
+            {
+                if (value > 45)
+                {
+                    MessageBox.Show("Lata doœwiadczenia nie mog¹ byæ wiêksze ni¿ 45.", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    e.Cancel = true;
+                }
+            }
+            else if (!string.IsNullOrEmpty(tbLataDoswiadczenia.Text))
+            {
+                MessageBox.Show("Proszê wpisaæ poprawn¹ liczbê.", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                e.Cancel = true;
+            }
         }
 
         private void CbStanowisko_SelectedIndexChanged(object sender, EventArgs e)
