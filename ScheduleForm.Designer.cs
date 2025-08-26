@@ -30,8 +30,27 @@
             ((System.ComponentModel.ISupportInitialize)dgvSchedule).BeginInit();
             SuspendLayout();
 
-         
-            Controls.Add(trackBarScroll);
+            // MenuStrip
+            menuStrip = new MenuStrip();
+            var fileMenu = new ToolStripMenuItem("Plik");
+            var exitItem = new ToolStripMenuItem("Zamknij", null, Exit_Click);
+            var saveFile = new ToolStripMenuItem("Zapisz jako CSV", null, Save_Click);
+
+            fileMenu.DropDownItems.Add(exitItem);
+            fileMenu.DropDownItems.Add(saveFile);
+
+            var extraMenu = new ToolStripMenuItem("Dodatkowe");
+            var aboutItem = new ToolStripMenuItem("O programie", null, About_Click);
+
+            extraMenu.DropDownItems.Add(aboutItem);
+
+            menuStrip.Items.Add(fileMenu);
+            menuStrip.Items.Add(extraMenu);
+
+            Controls.Add(menuStrip);
+            MainMenuStrip = menuStrip;
+
+
             // 
             // flowPanelControls
             // 
@@ -122,18 +141,24 @@
             btnGoEmployee.Click += btnGoEmployee_Click;
             // 
             // tableLayoutPanel
-            // 
+            //
             tableLayoutPanel.ColumnCount = 1;
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 23F));
-            tableLayoutPanel.Controls.Add(flowPanelControls, 0, 1);
-            tableLayoutPanel.Controls.Add(dgvSchedule, 0, 2);
+            tableLayoutPanel.ColumnStyles.Clear();
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+        
+            tableLayoutPanel.RowCount = 4;
+            tableLayoutPanel.RowStyles.Clear();
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));   
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 8F));    
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 112F));  
+            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));   
+            tableLayoutPanel.Controls.Add(menuStrip, 0, 0);          
+            tableLayoutPanel.Controls.Add(flowPanelControls, 0, 2);   
+            tableLayoutPanel.Controls.Add(dgvSchedule, 0, 3);         
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
             tableLayoutPanel.Name = "tableLayoutPanel";
-            tableLayoutPanel.RowCount = 3;
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 8F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 112F));
-            tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel.Size = new Size(1200, 749);
             tableLayoutPanel.TabIndex = 0;
             // 
@@ -169,10 +194,11 @@
         private Button btnAddShift;
         private Button btnGoEmployee;
         private TableLayoutPanel tableLayoutPanel;
-        
         private Button btnEditShift;
         private Button btnDeleteShift;
         private DataGridView dgvSchedule;
-        private System.Windows.Forms.TrackBar trackBarScroll;
+        private MenuStrip menuStrip;
+
+
     }
 }

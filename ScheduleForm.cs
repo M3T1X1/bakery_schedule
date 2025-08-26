@@ -64,13 +64,57 @@ namespace Bakery_Schedule
         {
             using (var db = new AppDbContext())
             {
-                
-                
+            }
+        }
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Save_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Plik CSV|*.csv";
+                sfd.FileName = "grafik.csv";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        using (var sw = new StreamWriter(sfd.FileName))
+                        {
+                            
+                            var headers = dgvSchedule.Columns.Cast<DataGridViewColumn>()
+                                           .Select(c => c.HeaderText);
+                            sw.WriteLine(string.Join(";", headers));
+
+                            foreach (DataGridViewRow row in dgvSchedule.Rows)
+                            {
+                                if (!row.IsNewRow)
+                                {
+                                    var cells = row.Cells.Cast<DataGridViewCell>()
+                                                    .Select(c => c.Value?.ToString() ?? "");
+                                    sw.WriteLine(string.Join(";", cells));
+                                }
+                            }
+                        }
+
+                        MessageBox.Show("Dane zapisane do pliku CSV!", "Zapis", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Błąd przy zapisie: " + ex.Message, "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
 
-  
-   
+        private void About_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Program do zarządzania grafikami pracy piekarzy.", "O programie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void btnAddShift_Click(object sender, EventArgs e)
         {
             if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
