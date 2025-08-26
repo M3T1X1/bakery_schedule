@@ -18,7 +18,6 @@ public class AppDbContext : DbContext
         var dbPath = Path.Combine(projectPath, "baza", "baza.db");
 
         optionsBuilder.UseSqlite($"Data Source={dbPath}");
-        MessageBox.Show($"U¿ywana baza: {dbPath}");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

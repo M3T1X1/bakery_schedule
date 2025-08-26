@@ -30,12 +30,7 @@
             ((System.ComponentModel.ISupportInitialize)dgvSchedule).BeginInit();
             SuspendLayout();
 
-            trackBarScroll = new TrackBar();
-            trackBarScroll.Orientation = Orientation.Horizontal;
-            trackBarScroll.Minimum = 1;
-            trackBarScroll.TickStyle = TickStyle.BottomRight;
-            trackBarScroll.Dock = DockStyle.Bottom;
-            trackBarScroll.Scroll += TrackBarScroll_Scroll;
+         
             Controls.Add(trackBarScroll);
             // 
             // flowPanelControls

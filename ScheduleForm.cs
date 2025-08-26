@@ -9,9 +9,6 @@ namespace Bakery_Schedule
 {
     public partial class ScheduleForm : Form
     {
-        private int pageSize = 1;
-        private int totalRecords;
-        private List<Zmiana> allChanges = new();
         public ScheduleForm()
         {
             InitializeComponent();
@@ -67,62 +64,13 @@ namespace Bakery_Schedule
         {
             using (var db = new AppDbContext())
             {
-                allChanges = db.Zmiana
-                .OrderBy(z => z.Data)   
-                .ToList()               
-                .OrderBy(z => z.Data)   // dla bezpieczeństwa powtórz sortowanie
-                .ThenBy(z => z.PoczatekZmiany) 
-                .ToList();
-
-                totalRecords = allChanges.Count;
-
-                int maxScroll = Math.Max(0, totalRecords - pageSize);
-
-                trackBarScroll.Minimum = 0;
-                trackBarScroll.Maximum = maxScroll;
-                trackBarScroll.Value = 0;
-                trackBarScroll.LargeChange = pageSize;
-                trackBarScroll.SmallChange = 1;
-
-                DisplayRecords(0);
+                
+                
             }
         }
 
-        private void trackBarScroll_Scroll(object sender, EventArgs e)
-        {
-            int startIndex = trackBarScroll.Value;
-            DisplayRecords(startIndex);
-        }
-
-        private void TrackBarScroll_Scroll(object sender, EventArgs e)
-        {
-            int startIndex = trackBarScroll.Value - 1;
-            DisplayRecords(startIndex);
-        }
-        private void DisplayRecords(int startIndex)
-        {
-            dgvSchedule.Rows.Clear();
-
-            if (allChanges == null || allChanges.Count == 0)
-                return;
-
-            var selected = allChanges
-                .Skip(startIndex)
-                .Take(pageSize);
-
-            foreach (var zmiana in selected)
-            {
-                dgvSchedule.Rows.Add(
-                    zmiana.ID_zmiany,
-                    zmiana.Data.ToShortDateString(),
-                    zmiana.PoczatekZmiany.ToString(@"hh\:mm"),
-                    zmiana.KoniecZmiany.ToString(@"hh\:mm"),
-                    zmiana.Imie,
-                    zmiana.Nazwisko,
-                    zmiana.ID_pracownika
-                );
-            }
-        }
+  
+   
         private void btnAddShift_Click(object sender, EventArgs e)
         {
             if (cbEmployee.SelectedItem is Pracownik selectedEmployee)
@@ -142,8 +90,8 @@ namespace Bakery_Schedule
                         TimeSpan selectedStart = dtpStart.Value.TimeOfDay;
                         TimeSpan selectedEnd = dtpEnd.Value.TimeOfDay;
 
-                        //dziwne ale ten warunek nie działa
-                        if (selectedStart == selectedEnd)
+
+                        if (selectedStart.Hours == selectedEnd.Hours && selectedStart.Minutes == selectedEnd.Minutes)
                         {
                             MessageBox.Show("Godziny początku i końca zmiany są identyczne.");
                             return;
