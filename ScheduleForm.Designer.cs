@@ -30,18 +30,20 @@
             ((System.ComponentModel.ISupportInitialize)dgvSchedule).BeginInit();
             SuspendLayout();
 
-            // MenuStrip
             menuStrip = new MenuStrip();
             var fileMenu = new ToolStripMenuItem("Plik");
             var exitItem = new ToolStripMenuItem("Zamknij", null, Exit_Click);
             var saveFile = new ToolStripMenuItem("Zapisz jako CSV", null, Save_Click);
+
 
             fileMenu.DropDownItems.Add(exitItem);
             fileMenu.DropDownItems.Add(saveFile);
 
             var extraMenu = new ToolStripMenuItem("Dodatkowe");
             var aboutItem = new ToolStripMenuItem("O programie", null, About_Click);
+            var pracownicyForm = new ToolStripMenuItem("Pracownicy", null, btnGoEmployee_Click);
 
+            extraMenu.DropDownItems.Add(pracownicyForm);
             extraMenu.DropDownItems.Add(aboutItem);
 
             menuStrip.Items.Add(fileMenu);
