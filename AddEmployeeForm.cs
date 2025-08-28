@@ -182,10 +182,9 @@ namespace Bakery_Schedule
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
             {
-                e.Handled = true; // blokuj wciœniêcie
+                e.Handled = true; 
             }
 
-            
             if (!char.IsControl(e.KeyChar) && tbTelefon.Text.Length >= 9)
             {
                 e.Handled = true;

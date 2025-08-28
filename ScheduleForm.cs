@@ -24,6 +24,16 @@ namespace Bakery_Schedule
             dgvSchedule.Columns.Add("Nazwisko", "Nazwisko");
             dgvSchedule.Columns.Add("id_pracownika", "ID Pracownika");
 
+    
+            //mapowanie kolumn, do poprawnego wyświetlania danych po filtracji
+            dgvSchedule.Columns["ID_zmiany"].DataPropertyName = "ID_zmiany";
+            dgvSchedule.Columns["Data"].DataPropertyName = "Data";
+            dgvSchedule.Columns["PoczatekZmiany"].DataPropertyName = "Początek";
+            dgvSchedule.Columns["KoniecZmiany"].DataPropertyName = "Koniec";
+            dgvSchedule.Columns["Imie"].DataPropertyName = "Imie";
+            dgvSchedule.Columns["Nazwisko"].DataPropertyName = "Nazwisko";
+            dgvSchedule.Columns["id_pracownika"].DataPropertyName = "ID_pracownika";
+
 
             LoadSchedule();
 
@@ -278,6 +288,31 @@ namespace Bakery_Schedule
             employeeForm.Show(); 
         }
 
-   
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            using (var db = new AppDbContext())
+            {
+                string search = txtSearch.Text.ToLower();
+
+                var results = db.Zmiana
+                    .Where(z => z.Imie.ToLower().Contains(search) ||
+                                z.Nazwisko.ToLower().Contains(search))
+                    .Select(z => new
+                    {
+                        z.ID_zmiany,
+                        Data = z.Data.ToShortDateString(),
+                        Początek = z.PoczatekZmiany.ToString(@"hh\:mm"),
+                        Koniec = z.KoniecZmiany.ToString(@"hh\:mm"),
+                        z.Imie,
+                        z.Nazwisko,
+                        z.ID_pracownika
+                    })
+                    .ToList();
+
+                dgvSchedule.DataSource = results;
+            }
+        }
+
+
     }
 }
