@@ -126,7 +126,11 @@ namespace Bakery_Schedule
                 cbRodzajUmowy.SelectedItem == null ||
                 !int.TryParse(tbLataDoswiadczenia.Text, out int lata) ||
                 cbStanowisko.SelectedItem == null ||
-                cbAdres.SelectedItem == null)
+                cbAdres.SelectedItem == null ||
+                tbImie.Text.Any(char.IsDigit) ||
+                tbNazwisko.Text.Any(char.IsDigit) ||
+                tbTelefon.Text.Length != 9 || 
+                !tbTelefon.Text.All(char.IsDigit))
             {
                 MessageBox.Show("Uzupe³nij poprawnie wszystkie pola.");
                 return;

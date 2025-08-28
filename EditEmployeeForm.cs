@@ -15,8 +15,10 @@ namespace Bakery_Schedule
             employeeId = id;
             this.Load += EditEmployeeForm_Load;
             
-            txtYearsOfExperience.KeyPress += txtYearsOfExperience_KeyPress;
-            txtYearsOfExperience.Validating += txtYearsOfExperience_Validating;
+            tbLataDoswiadczenia.KeyPress += txtYearsOfExperience_KeyPress;
+            tbLataDoswiadczenia.Validating += txtYearsOfExperience_Validating;
+
+
           
         }
 
@@ -25,38 +27,38 @@ namespace Bakery_Schedule
             using (var context = new AppDbContext())
             {
                 
-                cbPosition.DataSource = context.Stanowisko.ToList();
-                cbPosition.DisplayMember = "NazwaStanowiska";
-                cbPosition.ValueMember = "ID_stanowiska";
+                cbStanowisko.DataSource = context.Stanowisko.ToList();
+                cbStanowisko.DisplayMember = "NazwaStanowiska";
+                cbStanowisko.ValueMember = "ID_stanowiska";
 
                 cbProduct.DataSource = context.Produkt.ToList();
                 cbProduct.DisplayMember = "Nazwa";
                 cbProduct.ValueMember = "ID_produktu";
 
-                cbAddress.DataSource = context.Adres.ToList();
-                cbAddress.DisplayMember = "PelnyAdres";
-                cbAddress.ValueMember = "ID_adresu";
-           
+                cbAdres.DataSource = context.Adres.ToList();
+                cbAdres.DisplayMember = "PelnyAdres";
+                cbAdres.ValueMember = "ID_adresu";
+
                 var emp = context.Pracownik
                 .Include(p => p.Stanowisko)
                 .Include(p => p.Adres)
                 .FirstOrDefault(p => p.ID_pracownika == employeeId);
                 if (emp != null)
                 {
-                    txtFirstName.Text = emp.Imie;
-                    txtLastName.Text = emp.Nazwisko;
-                    txtPhoneNumber.Text = emp.Telefon;
-                    txtContractType.Text = emp.RodzajUmowy;
+                    tbImie.Text = emp.Imie;
+                    tbNazwisko.Text = emp.Nazwisko;
+                    tbTelefon.Text = emp.Telefon;
+                    cbRodzajUmowy.Text = emp.RodzajUmowy;
 
-                    if (!int.TryParse(txtYearsOfExperience.Text, out int lataDosw) || lataDosw < 0)
+                    if (!int.TryParse(tbLataDoswiadczenia.Text, out int lataDosw) || lataDosw < 0)
                     {
                         return;
                     }
 
                     emp.LataDoswiadczenia = lataDosw;
 
-                    cbPosition.SelectedValue = emp.ID_stanowiska ?? -1;
-                    cbAddress.SelectedValue = emp.ID_adresu;
+                    cbStanowisko.SelectedValue = emp.ID_stanowiska ?? -1;
+                    cbAdres.SelectedValue = emp.ID_adresu;
                     if (emp.Stanowisko?.ID_produktu != null)
                     {
                         cbProduct.SelectedValue = emp.Stanowisko.ID_produktu.Value;
@@ -76,7 +78,7 @@ namespace Bakery_Schedule
 
         private void txtYearsOfExperience_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (int.TryParse(txtYearsOfExperience.Text, out int value))
+            if (int.TryParse(tbLataDoswiadczenia.Text, out int value))
             {
                 if (value > 45)
                 {
@@ -84,7 +86,7 @@ namespace Bakery_Schedule
                     e.Cancel = true;
                 }
             }
-            else if (!string.IsNullOrEmpty(txtYearsOfExperience.Text))
+            else if (!string.IsNullOrEmpty(tbLataDoswiadczenia.Text))
             {
                 MessageBox.Show("Proszę wpisać poprawną liczbę.", "Błąd", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 e.Cancel = true;
@@ -92,6 +94,22 @@ namespace Bakery_Schedule
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(tbImie.Text) ||
+                string.IsNullOrWhiteSpace(tbNazwisko.Text) ||
+                string.IsNullOrWhiteSpace(tbTelefon.Text) ||
+                cbRodzajUmowy.SelectedItem == null ||
+                !int.TryParse(tbLataDoswiadczenia.Text, out int lata) ||
+                cbStanowisko.SelectedItem == null ||
+                cbAdres.SelectedItem == null ||
+                tbImie.Text.Any(char.IsDigit) ||
+                tbNazwisko.Text.Any(char.IsDigit) ||
+                tbTelefon.Text.Length != 9 ||
+                !tbTelefon.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("Uzupełnij poprawnie wszystkie pola.");
+                return;
+            }
+
             using (var context = new AppDbContext())
             {
                 var emp = context.Pracownik
@@ -101,16 +119,16 @@ namespace Bakery_Schedule
 
                 if (emp != null)
                 {
-                    emp.Imie = txtFirstName.Text;
-                    emp.Nazwisko = txtLastName.Text;
-                    emp.Telefon = txtPhoneNumber.Text;
-                    emp.RodzajUmowy = txtContractType.Text;
+                    emp.Imie = tbImie.Text;
+                    emp.Nazwisko = tbNazwisko.Text;
+                    emp.Telefon = tbTelefon.Text;
+                    emp.RodzajUmowy = cbRodzajUmowy.Text;
                    
-                    emp.ID_stanowiska = (int?)cbPosition.SelectedValue;
-                    emp.ID_adresu = (int?)cbAddress.SelectedValue;
+                    emp.ID_stanowiska = (int?)cbStanowisko.SelectedValue;
+                    emp.ID_adresu = (int?)cbAdres.SelectedValue;
 
 
-                    if (!int.TryParse(txtYearsOfExperience.Text, out int lataDosw) || lataDosw < 0)
+                    if (!int.TryParse(tbLataDoswiadczenia.Text, out int lataDosw) || lataDosw < 0)
                     {
                         MessageBox.Show("Lata doświadczenia muszą być liczbą nieujemną (0–45)");
                         return;
@@ -139,10 +157,7 @@ namespace Bakery_Schedule
                 {
                     MessageBox.Show("Nie znaleziono pracownika.");
                 }
-
             }
-            
-
         }
 
         private void txtPhoneNumber_KeyPress(object sender, KeyPressEventArgs e)

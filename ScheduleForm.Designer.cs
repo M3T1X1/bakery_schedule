@@ -163,12 +163,21 @@
             fileMenu.Name = "fileMenu";
             fileMenu.Size = new Size(38, 20);
             fileMenu.Text = "Plik";
+            var zamknij = fileMenu.DropDownItems.Add("Zamknij");
+            zamknij.Click += Exit_Click;
+            var eksport = fileMenu.DropDownItems.Add("Eksportuj do CSV");
+            eksport.Click += Save_Click;
             // 
             // extraMenu
             // 
             extraMenu.Name = "extraMenu";
             extraMenu.Size = new Size(79, 20);
             extraMenu.Text = "Dodatkowe";
+            var pracownicy = extraMenu.DropDownItems.Add("Zarządzaj pracownikami");
+            pracownicy.Click += btnGoEmployee_Click;
+
+            var oProgramie = extraMenu.DropDownItems.Add("O programie");
+            oProgramie.Click += About_Click;
             // 
             // dgvSchedule
             // 
@@ -211,6 +220,9 @@
             ResumeLayout(false);
             PerformLayout();
         }
+
+       
+
         private FlowLayoutPanel flowPanelControls;
         private ComboBox cbEmployee;
         private DateTimePicker dtpDate;
@@ -223,7 +235,6 @@
         private Button btnDeleteShift;
         private DataGridView dgvSchedule;
         private MenuStrip menuStrip;
-        private TextBox textBox1;
         private ToolStripMenuItem fileMenu;
         private ToolStripMenuItem extraMenu;
         private TextBox txtSearch;
