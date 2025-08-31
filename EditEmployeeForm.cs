@@ -65,7 +65,7 @@ namespace Bakery_Schedule
                     cbProduct.SelectedIndex = -1; 
                 }
 
-                // Ustawienie stanu cbProduct w zależności od stanowiska
+                
                 CbStanowisko_SelectedIndexChanged(null, null);
             }
         }
@@ -79,7 +79,22 @@ namespace Bakery_Schedule
             }
 
             var nazwa = stanowisko.NazwaStanowiska?.ToLower();
-            cbProduct.Enabled = nazwa == "piekarz" || nazwa == "cukiernik";
+
+            if (nazwa == "piekarz" || nazwa == "cukiernik")
+            {
+                cbProduct.Enabled = true;
+
+                
+                if (cbProduct.SelectedIndex == -1 && cbProduct.Items.Count > 0)
+                {
+                    cbProduct.SelectedIndex = 0;
+                }
+            }
+            else
+            {
+                cbProduct.Enabled = false;
+                cbProduct.SelectedIndex = -1; 
+            }
         }
 
         private void txtYearsOfExperience_KeyPress(object sender, KeyPressEventArgs e)
