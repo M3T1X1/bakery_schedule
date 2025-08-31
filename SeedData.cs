@@ -7,11 +7,22 @@ namespace Bakery_Schedule.Data
     {
         public static void Initialize(AppDbContext context)
         {
-            context.Database.EnsureCreated();       
+            //W celu odnowienia seeda odkomentować poniższy fragment i odpalić aplikacje
+            
+            /*
+            context.Pracownik.RemoveRange(context.Pracownik);
+            context.Stanowisko.RemoveRange(context.Stanowisko);
+            context.Adres.RemoveRange(context.Adres);
+            context.Produkt.RemoveRange(context.Produkt);
+            context.SaveChanges();
+            */
+
+            context.Database.EnsureCreated();
 
             if (context.Produkt.Any() || context.Adres.Any() || context.Stanowisko.Any() || context.Pracownik.Any())
-                return; // Dane już istnieją
-
+            {
+                return; 
+            }
             var produkty = new List<Produkt>
             {
                 new Produkt { Nazwa = "Chleb pszenny", ŚredniKosztProdukcji = 2.50m },
@@ -59,11 +70,12 @@ namespace Bakery_Schedule.Data
             };
             context.Stanowisko.AddRange(stanowiska);
             context.SaveChanges();
-
-            var pracownicy = new List<Pracownik>
+            //if (!context.Pracownik.Any())
+            //{
+                var pracownicy = new List<Pracownik>
             {
-                new Pracownik { Imie = "Jan", Nazwisko = "Kowalski", Telefon = "123456789", RodzajUmowy = "Umowa o pracę", LataDoswiadczenia = 5, Adres = adresy[0], Stanowisko = stanowiska[0] },
-                new Pracownik { Imie = "Anna", Nazwisko = "Nowak", Telefon = "987654321", RodzajUmowy = "Umowa zlecenie", LataDoswiadczenia = 2, Adres = adresy[1], Stanowisko = stanowiska[1] },
+                new Pracownik { Imie = "Jan", Nazwisko = "Kowalski", Telefon = "123456789", RodzajUmowy = "Umowa o pracę", LataDoswiadczenia = 5, Adres = adresy[0], Stanowisko = stanowiska[0], Produkt = produkty[0]},
+                new Pracownik { Imie = "Anna", Nazwisko = "Nowak", Telefon = "987654321", RodzajUmowy = "Umowa zlecenie", LataDoswiadczenia = 2, Adres = adresy[1], Stanowisko = stanowiska[1], Produkt = produkty[2] },
                 new Pracownik { Imie = "Piotr", Nazwisko = "Wiśniewski", Telefon = "555666777", RodzajUmowy = "Umowa o dzieło", LataDoswiadczenia = 3, Adres = adresy[2], Stanowisko = stanowiska[2] },
                 new Pracownik { Imie = "Katarzyna", Nazwisko = "Wójcik", Telefon = "222333444", RodzajUmowy = "Umowa o pracę", LataDoswiadczenia = 4, Adres = adresy[3], Stanowisko = stanowiska[3] },
                 new Pracownik { Imie = "Tomasz", Nazwisko = "Kamiński", Telefon = "888999000", RodzajUmowy = "Umowa zlecenie", LataDoswiadczenia = 1, Adres = adresy[4], Stanowisko = stanowiska[4] },
@@ -73,8 +85,9 @@ namespace Bakery_Schedule.Data
                 new Pracownik { Imie = "Paweł", Nazwisko = "Szymański", Telefon = "789789789", RodzajUmowy = "Umowa o pracę", LataDoswiadczenia = 8, Adres = adresy[8], Stanowisko = stanowiska[8] },
                 new Pracownik { Imie = "Joanna", Nazwisko = "Woźniak", Telefon = "111222333", RodzajUmowy = "Umowa o dzieło", LataDoswiadczenia = 5, Adres = adresy[9], Stanowisko = stanowiska[9] }
             };
-            context.Pracownik.AddRange(pracownicy);
-            context.SaveChanges();
+                context.Pracownik.AddRange(pracownicy);
+                context.SaveChanges();
+            //}
         }
     }
 }
