@@ -275,9 +275,15 @@ namespace Bakery_Schedule
                     db.SaveChanges();
                 }
 
-                // Usuń wiersz z DataGridView
+                try
+                { 
                 dgvSchedule.Rows.Remove(selectedRow);
+                }
 
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Zmiana została usunięta");
+                }
                 MessageBox.Show("Zmiana została usunięta.");
             }
         }
